@@ -51,7 +51,7 @@
   }
   
   .container {
-    @apply max-w-7xl mx-auto px-4;
+    @apply mx-auto px-4 xl:!max-w-[1225px];
   }
   
   .row {
@@ -216,5 +216,33 @@
   
   .border-border\/50 {
     border-color: rgba(234, 234, 234, 0.5);
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .leading-\[34px\] {
+    line-height: 34px;
+  }
+  
+  .scale-\[0\.6\] {
+    transform: scale(0.6);
+  }
+  
+  .scale-\[0\.8\] {
+    transform: scale(0.8);
+  }
+  
+  .text-white\/85 {
+    color: rgba(255, 255, 255, 0.85);
+  }
+  
+  .w-\[200px\] {
+    width: 200px;
+  }
+  
+  .h-\[200px\] {
+    height: 200px;
   }
 }

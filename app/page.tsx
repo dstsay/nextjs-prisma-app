@@ -1,94 +1,179 @@
-import Button from "@/layouts/components/Button";
 import HeroBanner from "@/layouts/partials/HeroBanner";
 
 export default function Home() {
   const bannerData = {
-    title: "Next.js with Prisma Architecture",
-    content: "A modern web application built with Next.js 15, TypeScript, Prisma ORM, and Tailwind CSS. Featuring responsive design and professional architecture.",
-    image: "/images/banner.png",
-    spinning_text: "• NEXT.JS ARCHITECTURE • MODERN TECH STACK",
+    title: "Glamour and Grace, On Call",
+    content: "We specialize in transforming visions into reality. Explore our work of innovative architectural.",
+    image: "/images/banner2.jpeg",
+    spinning_text: "",
     button: {
       enable: true,
-      label: "Get Started",
+      label: "Book an appointment",
       link: "/contact"
     }
+  };
+
+  // Mock data for sections to match original template
+  const galleryData = {
+    enable: true,
+    title: "Architecture Interior.",
+    subtitle: "ABOUT us",
+    description: "We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.",
+    images: [
+      "/images/gallery/1.png",
+      "/images/gallery/2.png",
+      "/images/gallery/3.png",
+      "/images/gallery/4.png"
+    ]
+  };
+
+  const funFactsData = {
+    enable: true,
+    title: "Since our founding, Kindora has made an extensive impact",
+    description: "",
+    metrics: [
+      {
+        name: "Interior Projects",
+        description: "Designs we have finished in last 32 years.",
+        counter: { count: "8", count_suffix: "K", count_prefix: "", count_duration: 3 }
+      },
+      {
+        name: "Years of Works",
+        description: "Designs we have finished in last 32 years.",
+        counter: { count: "31", count_suffix: "", count_prefix: "", count_duration: 0.5 }
+      },
+      {
+        name: "Satisfied Clients",
+        description: "Designs we have finished in last 32 years.",
+        counter: { count: "12", count_suffix: "K", count_prefix: "", count_duration: 3.5 }
+      },
+      {
+        name: "Happy Rate",
+        description: "Designs we have finished in last 32 years.",
+        counter: { count: "97", count_suffix: "%", count_prefix: "", count_duration: 4 }
+      }
+    ]
   };
 
   return (
     <>
       <HeroBanner banner={bannerData} />
-
-      {/* Features Section */}
+      
+      {/* Gallery Section - Simple version */}
       <section className="section">
         <div className="container">
           <div className="row justify-center">
-            <div className="col-lg-10 text-center">
-              <h2 className="section-title mb-4">
-                Built with Modern Technologies
+            <div className="col-lg-8 text-center">
+              <span className="text-primary text-sm font-medium uppercase tracking-wider">
+                {galleryData.subtitle}
+              </span>
+              <h2 className="section-title mt-2 mb-4">
+                {galleryData.title}
               </h2>
               <p className="text-lg text-text mb-12">
-                This application showcases the power of modern web development tools and frameworks.
+                {galleryData.description}
+              </p>
+            </div>
+          </div>
+          <div className="row g-4">
+            {galleryData.images.slice(0, 4).map((image, index) => (
+              <div key={index} className="col-lg-3 col-md-6">
+                <div className="overflow-hidden rounded-lg">
+                  <img 
+                    src={image} 
+                    alt={`Gallery ${index + 1}`}
+                    className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Fun Facts Section */}
+      <section className="section bg-light">
+        <div className="container">
+          <div className="row justify-center">
+            <div className="col-lg-8 text-center">
+              <h2 className="section-title mb-12">
+                {funFactsData.title}
+              </h2>
+            </div>
+          </div>
+          <div className="row g-4">
+            {funFactsData.metrics.map((metric, index) => (
+              <div key={index} className="col-lg-3 col-md-6 text-center">
+                <div className="fun-fact-card">
+                  <div className="text-4xl lg:text-5xl font-bold text-primary mb-2">
+                    {metric.counter.count_prefix}
+                    {metric.counter.count}
+                    {metric.counter.count_suffix}
+                  </div>
+                  <h4 className="text-xl font-semibold mb-2">{metric.name}</h4>
+                  <p className="text-text">{metric.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="section">
+        <div className="container">
+          <div className="row justify-center">
+            <div className="col-lg-8 text-center">
+              <span className="text-primary text-sm font-medium uppercase tracking-wider">
+                SERVICES
+              </span>
+              <h2 className="section-title mt-2 mb-4">
+                Get your dream home with expert help.
+              </h2>
+              <p className="text-lg text-text mb-12">
+                We provide comprehensive interior design and architectural services.
               </p>
             </div>
           </div>
           <div className="row g-4">
             <div className="col-lg-4 col-md-6">
-              <div className="feature-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="feature-icon mb-4">
+              <div className="service-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="service-icon mb-4">
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                    <span className="text-primary text-2xl font-bold">N</span>
+                    <span className="text-primary text-2xl">🏠</span>
                   </div>
                 </div>
-                <h3 className="h5 mb-3">Next.js 15</h3>
+                <h3 className="h5 mb-3">Interior Design</h3>
                 <p className="text-text">
-                  Latest version of Next.js with App Router, Server Components, and enhanced performance.
+                  Transform your space with our expert interior design services.
                 </p>
               </div>
             </div>
             <div className="col-lg-4 col-md-6">
-              <div className="feature-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="feature-icon mb-4">
+              <div className="service-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="service-icon mb-4">
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                    <span className="text-primary text-2xl font-bold">P</span>
+                    <span className="text-primary text-2xl">🏗️</span>
                   </div>
                 </div>
-                <h3 className="h5 mb-3">Prisma ORM</h3>
+                <h3 className="h5 mb-3">Architecture</h3>
                 <p className="text-text">
-                  Type-safe database access with Prisma Client and modern database management.
+                  Innovative architectural solutions for modern living.
                 </p>
               </div>
             </div>
             <div className="col-lg-4 col-md-6">
-              <div className="feature-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="feature-icon mb-4">
+              <div className="service-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="service-icon mb-4">
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                    <span className="text-primary text-2xl font-bold">T</span>
+                    <span className="text-primary text-2xl">💡</span>
                   </div>
                 </div>
-                <h3 className="h5 mb-3">Tailwind CSS</h3>
+                <h3 className="h5 mb-3">Consultation</h3>
                 <p className="text-text">
-                  Utility-first CSS framework for rapid UI development and responsive design.
+                  Expert consultation to bring your vision to life.
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="section bg-light">
-        <div className="container">
-          <div className="row justify-center text-center">
-            <div className="col-lg-8">
-              <h2 className="section-title mb-4">Ready to Get Started?</h2>
-              <p className="text-lg text-text mb-8">
-                Explore the features and capabilities of this modern Next.js application.
-              </p>
-              <Button 
-                link="/contact" 
-                label="Contact Us"
-                style="btn-primary"
-              />
             </div>
           </div>
         </div>

@@ -20,11 +20,11 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
         backgroundImage: `url(${banner.image})`
       }}
     >
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/40 z-10"></div>
+      {/* Translucent black overlay */}
+      <div className="absolute inset-0 bg-black/30 z-10"></div>
       
       <div className="container max-lg:mt-20 lg:h-full relative z-30">
-        <div className="row h-full items-center justify-center lg:-translate-x-16 max-lg:text-center">
+        <div className="row h-full items-center justify-center text-center">
           <div className="md:col-8 relative">
             <div className="relative">
               <h1
@@ -91,16 +91,21 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
               )}
               {/* /Rotating Text Decoration */}
             </div>
-            <div className="flex flex-col lg:flex-row justify-between items-center gap-6 mt-10">
+            <div className="flex flex-col items-center gap-6 mt-10">
               <p
                 data-aos="fade-up-sm"
                 data-aos-delay="300"
-                className="text-xl text-white/85 flex-1 text-balance leading-[34px]"
+                className="text-xl text-white/85 text-balance leading-[34px]"
               >
                 {banner.content}
               </p>
               <div data-aos="fade-up-sm" data-aos-delay="450">
-                <Button {...banner.button} />
+                <Button 
+                  enable={banner.button.enable}
+                  link={banner.button.link}
+                  label={banner.button.label}
+                  style="btn-primary"
+                />
               </div>
             </div>
           </div>
