@@ -4,7 +4,6 @@ import config from "@/config/config.json";
 import menu from "@/config/menu.json";
 import social from "@/config/social.json";
 import ImageFallback from "@/layouts/helpers/ImageFallback";
-import { markdownify } from "@/lib/utils/textConverter";
 import Link from "next/link";
 
 export default function Footer() {
@@ -18,8 +17,9 @@ export default function Footer() {
               data-aos="fade-up-sm"
               data-aos-delay="150"
               className="font-medium text-white mb-8"
-              dangerouslySetInnerHTML={{ __html: markdownify(footer_title) }}
-            />
+            >
+              {footer_title}
+            </h2>
             <div data-aos="fade-up-sm" data-aos-delay="200">
               <Button
                 enable={config.footer_button.enable}
@@ -74,10 +74,9 @@ export default function Footer() {
                   className="mb-3 max-md:mx-auto"
                   loading="lazy"
                 />
-                <p
-                  className="text-text-light/50 text-balance max-md:text-center"
-                  dangerouslySetInnerHTML={{ __html: markdownify(footer_content) }}
-                />
+                <p className="text-text-light/50 text-balance max-md:text-center">
+                  {footer_content}
+                </p>
               </div>
               <div
                 data-aos="fade-up-sm"
@@ -97,8 +96,9 @@ export default function Footer() {
                       href={`https://www.google.com/maps?q=${encodeURIComponent(
                         address
                       )}`}
-                      dangerouslySetInnerHTML={{ __html: markdownify(address) }}
-                    />
+                    >
+                      {address}
+                    </Link>
                   </li>
                 </ul>
               </div>

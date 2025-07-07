@@ -1,4 +1,3 @@
-import { markdownify } from "@/lib/utils/textConverter";
 import Link from "next/link";
 
 interface Props {
@@ -13,7 +12,7 @@ export default function ArrowBtn({ label, link }: Props) {
       className="text-white group capitalize hover:underline flex items-center max-w-max gap-1"
       href={link}
     >
-      <span dangerouslySetInnerHTML={{ __html: markdownify(label) }} />
+      <span>{label}</span>
       <div className="sr-only">Footer Button</div>
       <div className="relative w-5 h-5 grid place-items-center overflow-hidden">
         <i className="text-body -rotate-45 absolute top-full right-full group-hover:translate-x-full group-hover:-translate-y-full transition-transform duration-500 ease-out w-5 h-5 grid place-items-center">
