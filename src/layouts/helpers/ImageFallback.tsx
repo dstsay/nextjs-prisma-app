@@ -12,12 +12,17 @@ const ImageFallback = (props: any) => {
     setImgSrc(src);
   }, [src]);
 
+  // If no src is provided, don't render the image
+  if (!imgSrc && !fallback) {
+    return null;
+  }
+
   return (
     <Image
       {...rest}
-      src={imgSrc}
+      src={imgSrc || fallback || "/images/image-placeholder.png"}
       onError={() => {
-        setImgSrc(fallback);
+        setImgSrc(fallback || "/images/image-placeholder.png");
       }}
     />
   );

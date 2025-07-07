@@ -113,6 +113,7 @@ export default function Header() {
                       <div className="flex-shrink-0 mr-4">
                         <ImageFallback
                           src={menu.image}
+                          fallback="/images/image-placeholder.png"
                           alt={"Preview"}
                           className="aspect-square shadow max-lg:hidden"
                           width={240}

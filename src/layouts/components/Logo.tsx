@@ -9,14 +9,9 @@ const Logo = ({ src }: { src?: string }) => {
     logo_width,
     logo_height,
     logo_text,
-    title,
-  }: {
-    logo: string;
-    logo_width: string | number;
-    logo_height: string | number;
-    logo_text: string;
-    title: string;
   } = config.site;
+  
+  const title = config.site.title;
 
   const logoPath = src ? src : logo;
 
@@ -37,6 +32,7 @@ const Logo = ({ src }: { src?: string }) => {
           width={width * 2}
           height={height * 2}
           src={logoPath}
+          fallback="/images/image-placeholder.png"
           alt={title}
           priority
           style={{

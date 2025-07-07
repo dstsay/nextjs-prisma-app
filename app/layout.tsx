@@ -17,8 +17,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pf = theme.fonts.font_family.primary;
-  const fontHref = `https://fonts.googleapis.com/css2?family=${pf.replace(":", "%3A").replace(" ", "+")}&display=swap`;
+  const pf = theme.fonts.font_family.primary || "DM Sans:wght@400;500;700";
+  const fontHref = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(pf)}&display=swap`;
 
   return (
     <html suppressHydrationWarning={true} lang="en">
