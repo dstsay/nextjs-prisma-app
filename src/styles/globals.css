@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./navigation.css";
+@import "./safe.css";
+
 /* Base styles */
 @layer base {
   html {
@@ -140,6 +143,10 @@
     @apply px-8 py-4 text-lg;
   }
   
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+  
   /* Header styles */
   .navbar {
     @apply bg-white shadow-sm;
@@ -197,5 +204,17 @@
   
   .bg-light {
     background-color: #E9E9E9;
+  }
+  
+  .bg-body\/80 {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .backdrop-blur-md {
+    backdrop-filter: blur(12px);
+  }
+  
+  .border-border\/50 {
+    border-color: rgba(234, 234, 234, 0.5);
   }
 }
