@@ -27,6 +27,14 @@
   .h5 {
     @apply text-xl;
   }
+  
+  .h1 {
+    @apply text-4xl lg:text-5xl xl:text-6xl font-bold;
+  }
+  
+  .h2 {
+    @apply text-3xl lg:text-4xl font-bold;
+  }
 }
 
 /* Component styles */
@@ -71,6 +79,50 @@
     @apply w-full;
   }
   
+  .col-md-8 {
+    @apply w-full md:w-2/3;
+  }
+  
+  .col-md-10 {
+    @apply w-full md:w-5/6;
+  }
+  
+  .col-sm-9 {
+    @apply w-full sm:w-3/4;
+  }
+  
+  .col-sm-10 {
+    @apply w-full sm:w-5/6;
+  }
+  
+  .col-10 {
+    @apply w-5/6;
+  }
+  
+  .col-11 {
+    @apply w-11/12;
+  }
+  
+  .md\:col-6 {
+    @apply md:w-1/2;
+  }
+  
+  .md\:col-8 {
+    @apply md:w-2/3;
+  }
+  
+  .lg\:col-3 {
+    @apply lg:w-1/4;
+  }
+  
+  .lg\:col-5 {
+    @apply lg:w-5/12;
+  }
+  
+  .lg\:col-7 {
+    @apply lg:w-7/12;
+  }
+  
   /* Button styles */
   .btn {
     @apply inline-flex items-center justify-center px-6 py-3 font-medium rounded-lg transition-all duration-300 relative overflow-hidden;
@@ -112,6 +164,20 @@
   
   .social-link {
     @apply w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all duration-300;
+  }
+  
+  /* Animations */
+  .spin-animation {
+    animation: spin 20s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 }
 

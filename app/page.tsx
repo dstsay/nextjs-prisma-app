@@ -1,54 +1,22 @@
 import Button from "@/layouts/components/Button";
-import config from "@/config/config.json";
-import theme from "@/config/theme.json";
-import Image from "next/image";
+import HeroBanner from "@/layouts/partials/HeroBanner";
 
 export default function Home() {
+  const bannerData = {
+    title: "Next.js with Prisma Architecture",
+    content: "A modern web application built with Next.js 15, TypeScript, Prisma ORM, and Tailwind CSS. Featuring responsive design and professional architecture.",
+    image: "/images/banner.png",
+    spinning_text: "• NEXT.JS ARCHITECTURE • MODERN TECH STACK",
+    button: {
+      enable: true,
+      label: "Get Started",
+      link: "/contact"
+    }
+  };
+
   return (
     <>
-      {/* Hero Section */}
-      <section className="section-sm pt-0 pb-0 overflow-hidden">
-        <div className="container">
-          <div className="row items-center justify-between">
-            <div className="col-lg-6 col-md-12 order-2 order-lg-1">
-              <div className="banner-content">
-                <h1 className="mb-4 text-h1 font-bold">
-                  Next.js with Prisma
-                  <span className="text-primary"> Architecture</span>
-                </h1>
-                <p className="mb-8 text-lg">
-                  A modern web application built with Next.js 15, TypeScript, Prisma ORM, and Tailwind CSS. 
-                  Featuring responsive design and professional architecture.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <Button 
-                    link="/about" 
-                    label="Learn More"
-                    style="btn-primary"
-                  />
-                  <Button 
-                    link="/contact" 
-                    label="Get Started"
-                    style="btn-outline"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-6 col-md-12 order-1 order-lg-2">
-              <div className="banner-image">
-                <Image
-                  src="/images/banner.png"
-                  alt="Banner Image"
-                  width={600}
-                  height={400}
-                  className="w-full h-auto"
-                  priority
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroBanner banner={bannerData} />
 
       {/* Features Section */}
       <section className="section">
