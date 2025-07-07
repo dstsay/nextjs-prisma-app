@@ -1,35 +1,130 @@
+import Button from "@/layouts/components/Button";
+import config from "@/config/config.json";
+import theme from "@/config/theme.json";
+import Image from "next/image";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-      </div>
+    <>
+      {/* Hero Section */}
+      <section className="section-sm pt-0 pb-0 overflow-hidden">
+        <div className="container">
+          <div className="row items-center justify-between">
+            <div className="col-lg-6 col-md-12 order-2 order-lg-1">
+              <div className="banner-content">
+                <h1 className="mb-4 text-h1 font-bold">
+                  Next.js with Prisma
+                  <span className="text-primary"> Architecture</span>
+                </h1>
+                <p className="mb-8 text-lg">
+                  A modern web application built with Next.js 15, TypeScript, Prisma ORM, and Tailwind CSS. 
+                  Featuring responsive design and professional architecture.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <Button 
+                    link="/about" 
+                    label="Learn More"
+                    style="btn-primary"
+                  />
+                  <Button 
+                    link="/contact" 
+                    label="Get Started"
+                    style="btn-outline"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-6 col-md-12 order-1 order-lg-2">
+              <div className="banner-image">
+                <Image
+                  src="/images/banner.png"
+                  alt="Banner Image"
+                  width={600}
+                  height={400}
+                  className="w-full h-auto"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <h1 className="text-4xl font-bold">Welcome to Next.js with Prisma</h1>
-      </div>
+      {/* Features Section */}
+      <section className="section">
+        <div className="container">
+          <div className="row justify-center">
+            <div className="col-lg-10 text-center">
+              <h2 className="section-title mb-4">
+                Built with Modern Technologies
+              </h2>
+              <p className="text-lg text-text mb-12">
+                This application showcases the power of modern web development tools and frameworks.
+              </p>
+            </div>
+          </div>
+          <div className="row g-4">
+            <div className="col-lg-4 col-md-6">
+              <div className="feature-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="feature-icon mb-4">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <span className="text-primary text-2xl font-bold">N</span>
+                  </div>
+                </div>
+                <h3 className="h5 mb-3">Next.js 15</h3>
+                <p className="text-text">
+                  Latest version of Next.js with App Router, Server Components, and enhanced performance.
+                </p>
+              </div>
+            </div>
+            <div className="col-lg-4 col-md-6">
+              <div className="feature-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="feature-icon mb-4">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <span className="text-primary text-2xl font-bold">P</span>
+                  </div>
+                </div>
+                <h3 className="h5 mb-3">Prisma ORM</h3>
+                <p className="text-text">
+                  Type-safe database access with Prisma Client and modern database management.
+                </p>
+              </div>
+            </div>
+            <div className="col-lg-4 col-md-6">
+              <div className="feature-card p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="feature-icon mb-4">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <span className="text-primary text-2xl font-bold">T</span>
+                  </div>
+                </div>
+                <h3 className="h5 mb-3">Tailwind CSS</h3>
+                <p className="text-text">
+                  Utility-first CSS framework for rapid UI development and responsive design.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-      </div>
-    </main>
+      {/* CTA Section */}
+      <section className="section bg-light">
+        <div className="container">
+          <div className="row justify-center text-center">
+            <div className="col-lg-8">
+              <h2 className="section-title mb-4">Ready to Get Started?</h2>
+              <p className="text-lg text-text mb-8">
+                Explore the features and capabilities of this modern Next.js application.
+              </p>
+              <Button 
+                link="/contact" 
+                label="Contact Us"
+                style="btn-primary"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
