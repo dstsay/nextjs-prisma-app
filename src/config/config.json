@@ -1,15 +1,15 @@
 {
   "site": {
-    "title": "NextSpace - Architecture &amp; Interior Firm NextJS Template",
+    "title": "Goldie Grace - Glamour and Grace, On Call",
     "base_url": "https://nextspace-nextjs.vercel.app",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
-    "logo": "/images/logo.svg",
-    "logo_footer": "/images/logo-footer.svg",
-    "logo_width": "200",
-    "logo_height": "40",
-    "logo_text": "NextSpace"
+    "logo": "/images/logo.png",
+    "logo_footer": "/images/logo.png",
+    "logo_width": "180",
+    "logo_height": "72",
+    "logo_text": "Goldie Grace"
   },
 
   "settings": {
@@ -27,8 +27,8 @@
 
   "navigation_button": {
     "enable": true,
-    "label": "Get This Template",
-    "link": "https://themefisher.com/products/nextspace-nextjs"
+    "label": "Book an appointment",
+    "link": "/contact"
   },
 
   "footer_button": {

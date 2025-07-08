@@ -41,16 +41,12 @@ export default function Header() {
 
   return (
     <header className={`header fixed top-0 z-50 w-full`}>
-      <nav className="navbar container relative z-10">
-        {/* logo */}
-        <div className="order-0 lg:order-2">
-          <Logo />
-        </div>
-        {/* navbar toggler */}
+      <nav className="navbar container relative z-10 lg:grid lg:grid-cols-3 lg:items-center">
+        {/* Mobile navbar toggler */}
         <input id="nav-toggle" type="checkbox" className="hidden" />
         <label
           htmlFor="nav-toggle"
-          className="order-3 flex cursor-pointer items-center text-text lg:order-1 lg:hidden"
+          className="order-3 flex cursor-pointer items-center text-text lg:hidden"
         >
           <svg
             id="show-button"
@@ -72,10 +68,11 @@ export default function Header() {
             ></polygon>
           </svg>
         </label>
-        {/* /navbar toggler */}
+        
+        {/* Left side - Navigation menu */}
         <ul
           id="nav-menu"
-          className="navbar-nav order-3 hidden pb-6 lg:order-1 lg:flex lg:w-auto lg:pb-0"
+          className="navbar-nav order-3 hidden pb-6 lg:order-1 lg:flex lg:w-auto lg:pb-0 lg:justify-start"
         >
           {main.map((menu) => (
             <React.Fragment key={menu.url}>
@@ -233,7 +230,13 @@ export default function Header() {
           )}
         </ul>
 
-        <div className="order-1 ml-auto flex items-center md:order-2 lg:ml-0">
+        {/* Center - Logo */}
+        <div className="order-0 flex justify-center lg:order-2">
+          <Logo />
+        </div>
+
+        {/* Right side - Button */}
+        <div className="order-1 ml-auto flex items-center md:order-2 lg:ml-0 lg:justify-end">
           <div className="hidden lg:flex items-center">
             <Button
               enable={navigation_button.enable}

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Button from "@/layouts/components/Button";
 
 interface BannerData {
@@ -13,13 +16,30 @@ interface BannerData {
 }
 
 const HeroBanner = ({ banner }: { banner: BannerData }) => {
+  const images = ["/images/banner2.jpeg", "/images/banner.jpg"];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
-    <section
-      className="section relative bg-cover bg-center md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)]"
-      style={{
-        backgroundImage: `url(${banner.image})`
-      }}
-    >
+    <section className="section relative bg-cover bg-center md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden">
+      {/* Background images with fade transition */}
+      {images.map((image, index) => (
+        <div
+          key={index}
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-[2000ms]"
+          style={{
+            backgroundImage: `url(${image})`,
+            opacity: index === currentImageIndex ? 1 : 0,
+          }}
+        />
+      ))}
       {/* Translucent black overlay */}
       <div className="absolute inset-0 bg-black/30 z-10"></div>
       

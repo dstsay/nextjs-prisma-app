@@ -2,8 +2,8 @@ import HeroBanner from "@/layouts/partials/HeroBanner";
 
 export default function Home() {
   const bannerData = {
-    title: "Glamour and Grace, On Call",
-    content: "We specialize in transforming visions into reality. Explore our work of innovative architectural.",
+    title: "Glamour and Grace On Call",
+    content: "Transforming your vision into reality. Get your next look now.",
     image: "/images/banner2.jpeg",
     spinning_text: "",
     button: {
@@ -16,9 +16,9 @@ export default function Home() {
   // Mock data for sections to match original template
   const galleryData = {
     enable: true,
-    title: "Architecture Interior.",
+    title: "Professional Makeup Guidance - On Call, On Point",
     subtitle: "ABOUT us",
-    description: "We specialize in transforming visions into reality. Explore our portfolio of innovative architectural and interior design projects crafted with precision.",
+    description: "Goldie Grace is your on-demand beauty concierge, connecting you with hand-picked professional makeup artists for live, one-on-one video consultations. Whether you're getting ready for a big presentation, a special occasion, or just want to feel your most confident self every day, our experts guide you step-by-step—right from your own vanity and using the products you already own.",
     images: [
       "/images/gallery/1.png",
       "/images/gallery/2.png",
