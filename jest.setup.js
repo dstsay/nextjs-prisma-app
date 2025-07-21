@@ -1,5 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+// Import the shared prisma instance
+const { prisma } = require('./src/lib/db');
 
 // Reset database between tests
 beforeEach(async () => {
