@@ -276,13 +276,15 @@ export default function QuestionnairePage() {
         </QuestionTransition>
 
         {/* Navigation Buttons */}
-        <div className="flex justify-between mt-12">
-          <button
-            onClick={handleBack}
-            className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors"
-          >
-            Back
-          </button>
+        <div className={`flex ${currentQuestionIndex === 0 ? 'justify-end' : 'justify-between'} mt-12`}>
+          {currentQuestionIndex > 0 && (
+            <button
+              onClick={handleBack}
+              className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors"
+            >
+              Back
+            </button>
+          )}
           <button
             onClick={handleSkip}
             className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors"
