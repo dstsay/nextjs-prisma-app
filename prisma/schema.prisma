@@ -1,23 +1,222 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-// Example User model
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Authentication Models
+model Client {
+  id                String          @id @default(cuid())
+  username          String          @unique
+  password          String          // Hashed with bcrypt
+  email             String          @unique
+  name              String?
+  phone             String?
+  profileImage      String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  appointments      Appointment[]
+  consultations     Consultation[]
+  reviews           Review[]
+  quizResponses     QuizResponse[]
+}
+
+model MakeupArtist {
+  id                String          @id @default(cuid())
+  username          String          @unique
+  password          String          // Hashed with bcrypt
+  email             String          @unique
+  name              String
+  bio               String?
+  specialties       String[]
+  yearsExperience   Int?
+  profileImage      String?
+  hourlyRate        Float?
+  isAvailable       Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  appointments      Appointment[]
+  consultations     Consultation[]
+  reviews           Review[]
+  availability      Availability[]
+}
+
+// Quiz System Models
+model Quiz {
+  id                String          @id @default(cuid())
+  title             String
+  description       String?
+  category          String          // "intake", "style", "preferences"
+  isActive          Boolean         @default(true)
+  order             Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  questions         Question[]
+  responses         QuizResponse[]
+}
+
+model Question {
+  id                String          @id @default(cuid())
+  quizId            String
+  questionText      String
+  questionType      QuestionType    @default(MULTIPLE_CHOICE)
+  helpText          String?
+  questionImage     String?         // Optional image for the question
+  order             Int
+  isRequired        Boolean         @default(true)
+  
+  quiz              Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answerOptions     AnswerOption[]
+  answers           Answer[]
+
+  @@index([quizId])
+}
+
+model AnswerOption {
+  id                String          @id @default(cuid())
+  questionId        String
+  optionText        String
+  optionValue       String          // For data analysis
+  optionImage       String?         // URL/path to image for this answer option
+  imageAlt          String?         // Alt text for accessibility
+  order             Int
+  
+  question          Question        @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  answers           Answer[]
+
+  @@index([questionId])
+}
+
+model QuizResponse {
+  id                String          @id @default(cuid())
+  clientId          String
+  quizId            String
+  completedAt       DateTime?
+  startedAt         DateTime        @default(now())
+  
+  client            Client          @relation(fields: [clientId], references: [id])
+  quiz              Quiz            @relation(fields: [quizId], references: [id])
+  answers           Answer[]
+
+  @@index([clientId])
+  @@index([quizId])
+}
+
+model Answer {
+  id                String          @id @default(cuid())
+  responseId        String
+  questionId        String
+  answerOptionId    String?         // For multiple choice
+  textAnswer        String?         // For text questions
+  numberAnswer      Int?            // For rating questions
+  createdAt         DateTime        @default(now())
+  
+  response          QuizResponse    @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  question          Question        @relation(fields: [questionId], references: [id])
+  answerOption      AnswerOption?   @relation(fields: [answerOptionId], references: [id])
+
+  @@index([responseId])
+  @@index([questionId])
+}
+
+// Booking & Consultation Models
+model Appointment {
+  id                String          @id @default(cuid())
+  clientId          String
+  artistId          String
+  scheduledAt       DateTime
+  duration          Int             @default(30) // in minutes
+  status            AppointmentStatus @default(PENDING)
+  type              AppointmentType @default(CONSULTATION)
+  notes             String?
+  cancelReason      String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  client            Client          @relation(fields: [clientId], references: [id])
+  artist            MakeupArtist    @relation(fields: [artistId], references: [id])
+  consultation      Consultation?
+
+  @@index([clientId])
+  @@index([artistId])
+  @@index([scheduledAt])
+}
+
+model Consultation {
+  id                String          @id @default(cuid())
+  appointmentId     String          @unique
+  clientId          String
+  artistId          String
+  startedAt         DateTime?
+  endedAt           DateTime?
+  videoRoomUrl      String?
+  recordingUrl      String?
+  notes             String?
+  recommendations   Json?           // Product recommendations as JSON
+  followUpDate      DateTime?
+  
+  appointment       Appointment     @relation(fields: [appointmentId], references: [id])
+  client            Client          @relation(fields: [clientId], references: [id])
+  artist            MakeupArtist    @relation(fields: [artistId], references: [id])
+}
+
+model Availability {
+  id                String          @id @default(cuid())
+  artistId          String
+  dayOfWeek         Int             // 0-6 (Sunday-Saturday)
+  startTime         String          // "09:00"
+  endTime           String          // "17:00"
+  isActive          Boolean         @default(true)
+  
+  artist            MakeupArtist    @relation(fields: [artistId], references: [id])
+
+  @@index([artistId])
+}
+
+model Review {
+  id                String          @id @default(cuid())
+  clientId          String
+  artistId          String
+  rating            Int             // 1-5
+  comment           String?
+  isPublished       Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  
+  client            Client          @relation(fields: [clientId], references: [id])
+  artist            MakeupArtist    @relation(fields: [artistId], references: [id])
+
+  @@index([artistId])
+}
+
+// Enums
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TEXT
+  RATING
+  CHECKBOX
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum AppointmentType {
+  CONSULTATION
+  FOLLOW_UP
+  SPECIAL_EVENT
 }

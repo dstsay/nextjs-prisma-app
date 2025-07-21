@@ -8,7 +8,7 @@ export default function Home() {
     spinning_text: "",
     button: {
       enable: true,
-      label: "Book an appointment",
+      label: "Discover Your Perfect Look",
       link: "/contact"
     }
   };

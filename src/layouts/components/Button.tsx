@@ -22,7 +22,7 @@ const Button: React.FC<Props> = ({
 
   const bgHoverClass =
     className === "btn-primary"
-      ? "bg-red-700"
+      ? "bg-[#8B6F33]"
       : className === "btn-outline"
         ? "bg-white/50"
         : className === "btn-secondary"

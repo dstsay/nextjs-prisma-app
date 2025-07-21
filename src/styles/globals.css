@@ -132,7 +132,13 @@
   }
   
   .btn-primary {
-    @apply bg-red-600 text-white hover:bg-red-700;
+    background-color: #A1823C;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #8B6F33;
+    color: white;
   }
   
   .btn-outline {
