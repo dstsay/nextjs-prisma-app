@@ -106,23 +106,9 @@ async function main() {
             }
           },
           {
-            questionText: 'What is your skin type?',
-            questionType: 'MULTIPLE_CHOICE',
-            order: 2,
-            answerOptions: {
-              create: [
-                { optionText: 'Dry', optionValue: 'dry', order: 1 },
-                { optionText: 'Oily', optionValue: 'oily', order: 2 },
-                { optionText: 'Combination', optionValue: 'combination', order: 3 },
-                { optionText: 'Normal', optionValue: 'normal', order: 4 },
-                { optionText: 'Sensitive', optionValue: 'sensitive', order: 5 }
-              ]
-            }
-          },
-          {
             questionText: 'What is your preferred makeup style?',
             questionType: 'MULTIPLE_CHOICE',
-            order: 3,
+            order: 2,
             answerOptions: {
               create: [
                 { 
@@ -157,23 +143,9 @@ async function main() {
             }
           },
           {
-            questionText: 'How much time do you typically spend on makeup?',
-            questionType: 'MULTIPLE_CHOICE',
-            order: 4,
-            answerOptions: {
-              create: [
-                { optionText: '5 minutes or less', optionValue: '5_min', order: 1 },
-                { optionText: '10-15 minutes', optionValue: '10_15_min', order: 2 },
-                { optionText: '20-30 minutes', optionValue: '20_30_min', order: 3 },
-                { optionText: '30+ minutes', optionValue: '30_plus_min', order: 4 },
-                { optionText: 'It varies', optionValue: 'varies', order: 5 }
-              ]
-            }
-          },
-          {
             questionText: 'What\'s your biggest makeup challenge?',
             questionType: 'MULTIPLE_CHOICE',
-            order: 5,
+            order: 3,
             answerOptions: {
               create: [
                 { optionText: 'Finding the right products', optionValue: 'products', order: 1 },
@@ -182,52 +154,6 @@ async function main() {
                 { optionText: 'Making it last all day', optionValue: 'longevity', order: 4 },
                 { optionText: 'Creating different looks', optionValue: 'variety', order: 5 },
                 { optionText: 'Time constraints', optionValue: 'time', order: 6 }
-              ]
-            }
-          },
-          {
-            questionText: 'Which eye shape best matches yours?',
-            questionType: 'MULTIPLE_CHOICE',
-            questionImage: '/images/quiz/eye-shapes-guide.jpg',
-            helpText: 'Compare your eyes to the reference image above',
-            order: 6,
-            answerOptions: {
-              create: [
-                { 
-                  optionText: 'Almond', 
-                  optionValue: 'almond',
-                  optionImage: '/images/quiz/eye-almond.jpg',
-                  imageAlt: 'Almond eye shape',
-                  order: 1 
-                },
-                { 
-                  optionText: 'Round', 
-                  optionValue: 'round',
-                  optionImage: '/images/quiz/eye-round.jpg',
-                  imageAlt: 'Round eye shape',
-                  order: 2 
-                },
-                { 
-                  optionText: 'Hooded', 
-                  optionValue: 'hooded',
-                  optionImage: '/images/quiz/eye-hooded.jpg',
-                  imageAlt: 'Hooded eye shape',
-                  order: 3 
-                },
-                { 
-                  optionText: 'Monolid', 
-                  optionValue: 'monolid',
-                  optionImage: '/images/quiz/eye-monolid.jpg',
-                  imageAlt: 'Monolid eye shape',
-                  order: 4 
-                },
-                { 
-                  optionText: 'Downturned', 
-                  optionValue: 'downturned',
-                  optionImage: '/images/quiz/eye-downturned.jpg',
-                  imageAlt: 'Downturned eye shape',
-                  order: 5 
-                }
               ]
             }
           },
@@ -260,18 +186,23 @@ async function main() {
             }
           },
           {
-            questionText: 'How would you rate your current satisfaction with your makeup routine?',
-            questionType: 'RATING',
-            helpText: 'Rate from 1 (very unsatisfied) to 5 (very satisfied)',
-            order: 6,
-            isRequired: true
-          },
-          {
             questionText: 'What specific areas would you like help with?',
-            questionType: 'TEXT',
-            helpText: 'Please describe any specific concerns or goals',
-            order: 7,
-            isRequired: false
+            questionType: 'MULTIPLE_CHOICE',
+            helpText: 'Select your primary concern',
+            order: 6,
+            isRequired: false,
+            answerOptions: {
+              create: [
+                { optionText: 'Foundation matching & application', optionValue: 'foundation', order: 1 },
+                { optionText: 'Eye makeup techniques', optionValue: 'eyes', order: 2 },
+                { optionText: 'Contouring & highlighting', optionValue: 'contouring', order: 3 },
+                { optionText: 'Lip color selection', optionValue: 'lips', order: 4 },
+                { optionText: 'Skincare prep for makeup', optionValue: 'skincare', order: 5 },
+                { optionText: 'Complete makeup routine', optionValue: 'complete', order: 6 },
+                { optionText: 'Special occasion looks', optionValue: 'special', order: 7 },
+                { optionText: 'Quick everyday looks', optionValue: 'everyday', order: 8 }
+              ]
+            }
           }
         ]
       }
@@ -320,6 +251,20 @@ async function main() {
                   optionImage: '/images/quiz/celeb-lupita.jpg',
                   imageAlt: 'Lupita Nyong\'o makeup style',
                   order: 4 
+                },
+                { 
+                  optionText: 'Beyoncé - Glamorous and flawless', 
+                  optionValue: 'beyonce',
+                  optionImage: '/images/quiz/celeb-beyonce.jpg',
+                  imageAlt: 'Beyoncé makeup style',
+                  order: 5 
+                },
+                { 
+                  optionText: 'Ariana Grande - Youthful and polished', 
+                  optionValue: 'ariana',
+                  optionImage: '/images/quiz/celeb-ariana.jpg',
+                  imageAlt: 'Ariana Grande makeup style',
+                  order: 6 
                 }
               ]
             }

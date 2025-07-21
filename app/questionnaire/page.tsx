@@ -85,10 +85,38 @@ export default function QuestionnairePage() {
     }
   };
 
-  const handleAnswerSelect = (answerId: string) => {
+  const handleAnswerSelect = async (answerId: string) => {
     const selectedOption = currentQuestion?.answerOptions.find(opt => opt.id === answerId);
     console.log('Answer selected:', selectedOption?.optionText || 'Unknown');
     setSelectedAnswer(answerId);
+    
+    // Short delay to show the selection visual feedback
+    await new Promise(resolve => setTimeout(resolve, 400));
+    
+    // Auto-progress to next question
+    if (currentQuestion) {
+      // Save the answer
+      setAnswers(prev => ({
+        ...prev,
+        [currentQuestion.id]: answerId
+      }));
+      
+      // Save to database
+      await saveAnswer(currentQuestion.id, answerId);
+      
+      // Handle navigation
+      if (isLastQuestion) {
+        router.push('/questionnaire/thank-you');
+      } else {
+        // Start transition
+        setIsTransitioning(true);
+        
+        setTimeout(() => {
+          setCurrentQuestionIndex(prev => prev + 1);
+          setIsTransitioning(false);
+        }, 500); // Half of the transition duration
+      }
+    }
   };
 
   const handleNext = async () => {
@@ -250,21 +278,16 @@ export default function QuestionnairePage() {
         {/* Navigation Buttons */}
         <div className="flex justify-between mt-12">
           <button
+            onClick={handleBack}
+            className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors"
+          >
+            Back
+          </button>
+          <button
             onClick={handleSkip}
             className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors"
           >
             Skip
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={!selectedAnswer}
-            className={`px-8 py-3 rounded-full transition-colors ${
-              selectedAnswer
-                ? 'bg-[#A1823C] text-white hover:bg-[#8B6F33]'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-          >
-            Continue
           </button>
         </div>
       </div>

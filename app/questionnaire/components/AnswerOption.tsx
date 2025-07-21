@@ -19,11 +19,11 @@ export default function AnswerOption({
     <button
       onClick={onSelect}
       className={`
-        px-6 py-3 rounded-full border-2 transition-all duration-300
+        px-6 py-3 rounded-full border-2 transition-all duration-300 transform
         ${
           isSelected
-            ? 'border-[#A1823C] bg-[#A1823C] text-white'
-            : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+            ? 'border-[#A1823C] bg-[#A1823C] text-white scale-105'
+            : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:scale-105'
         }
       `}
     >
