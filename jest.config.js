@@ -2,6 +2,8 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   moduleNameMapper: {
+    '^@/lib/(.*)$': '<rootDir>/src/lib/$1',
+    '^@/app/(.*)$': '<rootDir>/app/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   testMatch: [

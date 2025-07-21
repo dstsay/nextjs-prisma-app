@@ -9,7 +9,7 @@ export default function Home() {
     button: {
       enable: true,
       label: "Discover Your Perfect Look",
-      link: "/contact"
+      link: "/questionnaire"
     }
   };
 

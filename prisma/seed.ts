@@ -89,9 +89,26 @@ async function main() {
       questions: {
         create: [
           {
-            questionText: 'What is your skin type?',
+            questionText: 'When it comes to style, what\'s important to you?',
             questionType: 'MULTIPLE_CHOICE',
             order: 1,
+            answerOptions: {
+              create: [
+                { optionText: 'Having my own Stylist', optionValue: 'stylist', order: 1 },
+                { optionText: 'Find my best fit', optionValue: 'best_fit', order: 2 },
+                { optionText: 'A fun surprise', optionValue: 'surprise', order: 3 },
+                { optionText: 'Unique pieces', optionValue: 'unique', order: 4 },
+                { optionText: 'Update my look', optionValue: 'update_look', order: 5 },
+                { optionText: 'Save time shopping', optionValue: 'save_time', order: 6 },
+                { optionText: 'Try new trends', optionValue: 'new_trends', order: 7 },
+                { optionText: 'Browse a personalized shop', optionValue: 'personalized', order: 8 }
+              ]
+            }
+          },
+          {
+            questionText: 'What is your skin type?',
+            questionType: 'MULTIPLE_CHOICE',
+            order: 2,
             answerOptions: {
               create: [
                 { optionText: 'Dry', optionValue: 'dry', order: 1 },
@@ -105,7 +122,7 @@ async function main() {
           {
             questionText: 'What is your preferred makeup style?',
             questionType: 'MULTIPLE_CHOICE',
-            order: 2,
+            order: 3,
             answerOptions: {
               create: [
                 { 
@@ -140,11 +157,40 @@ async function main() {
             }
           },
           {
+            questionText: 'How much time do you typically spend on makeup?',
+            questionType: 'MULTIPLE_CHOICE',
+            order: 4,
+            answerOptions: {
+              create: [
+                { optionText: '5 minutes or less', optionValue: '5_min', order: 1 },
+                { optionText: '10-15 minutes', optionValue: '10_15_min', order: 2 },
+                { optionText: '20-30 minutes', optionValue: '20_30_min', order: 3 },
+                { optionText: '30+ minutes', optionValue: '30_plus_min', order: 4 },
+                { optionText: 'It varies', optionValue: 'varies', order: 5 }
+              ]
+            }
+          },
+          {
+            questionText: 'What\'s your biggest makeup challenge?',
+            questionType: 'MULTIPLE_CHOICE',
+            order: 5,
+            answerOptions: {
+              create: [
+                { optionText: 'Finding the right products', optionValue: 'products', order: 1 },
+                { optionText: 'Application techniques', optionValue: 'techniques', order: 2 },
+                { optionText: 'Color matching', optionValue: 'color_matching', order: 3 },
+                { optionText: 'Making it last all day', optionValue: 'longevity', order: 4 },
+                { optionText: 'Creating different looks', optionValue: 'variety', order: 5 },
+                { optionText: 'Time constraints', optionValue: 'time', order: 6 }
+              ]
+            }
+          },
+          {
             questionText: 'Which eye shape best matches yours?',
             questionType: 'MULTIPLE_CHOICE',
             questionImage: '/images/quiz/eye-shapes-guide.jpg',
             helpText: 'Compare your eyes to the reference image above',
-            order: 3,
+            order: 6,
             answerOptions: {
               create: [
                 { 
@@ -306,8 +352,16 @@ async function main() {
     }
   })
 
+  // Verify seeded data
+  const quizCount = await prisma.quiz.count()
+  const questionCount = await prisma.question.count()
+  const artistCount = await prisma.makeupArtist.count()
+  
   console.log('Database seeded successfully!')
-  console.log('Sample users created:')
+  console.log(`- ${quizCount} quizzes created`)
+  console.log(`- ${questionCount} questions created`)
+  console.log(`- ${artistCount} makeup artists created`)
+  console.log('\nSample users created:')
   console.log('- Artist: sarah_beauty / password123')
   console.log('- Artist: maria_glam / password123')  
   console.log('- Client: jane_doe / password123')
