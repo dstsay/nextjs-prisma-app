@@ -1,6 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import ArtistCard from '@/components/ArtistCard';
 
+// Force dynamic rendering to always fetch fresh data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getArtistsWithRatings() {
   const artists = await prisma.makeupArtist.findMany({
     include: {
@@ -11,6 +15,9 @@ async function getArtistsWithRatings() {
       { createdAt: 'desc' }
     ]
   });
+
+  // Log for debugging in production
+  console.log(`Found ${artists.length} artists in database`);
 
   return artists.map(artist => {
     const ratings = artist.reviews.map(review => review.rating);
