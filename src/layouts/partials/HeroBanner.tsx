@@ -28,7 +28,7 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
   }, [images.length]);
 
   return (
-    <section className="section relative bg-cover bg-center h-screen md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden">
+    <section className="section relative bg-cover bg-center h-[100dvh] h-screen md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden min-h-[600px]">
       {/* Background images with fade transition */}
       {images.map((image, index) => (
         <div
@@ -43,9 +43,11 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
       {/* Translucent black overlay */}
       <div className="absolute inset-0 bg-black/30 z-10"></div>
       
-      <div className="container lg:h-full relative z-30">
+      <div className="container h-full lg:h-full relative z-30">
         <div className="row h-full md:items-center justify-center text-center">
-          <div className="md:col-8 relative pt-[35vh] md:pt-0">
+          <div className="md:col-8 relative flex flex-col h-full md:h-auto justify-center md:block">
+            {/* Spacer for mobile positioning */}
+            <div className="flex-grow md:hidden" style={{ minHeight: '15vh' }}></div>
             <div className="relative">
               <h1
                 data-aos="fade-up-sm"
@@ -119,7 +121,7 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
               >
                 {banner.content}
               </p>
-              <div data-aos="fade-up-sm" data-aos-delay="450" className="mt-12 md:mt-0 w-full md:w-auto">
+              <div data-aos="fade-up-sm" data-aos-delay="450" className="mt-8 md:mt-0 w-full md:w-auto">
                 <Button 
                   enable={banner.button.enable}
                   link={banner.button.link}
@@ -129,6 +131,8 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
                 />
               </div>
             </div>
+            {/* Bottom spacer for mobile */}
+            <div className="md:hidden" style={{ minHeight: '10vh' }}></div>
           </div>
         </div>
       </div>
