@@ -28,7 +28,7 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
   }, [images.length]);
 
   return (
-    <section className="section relative bg-cover bg-center h-[100dvh] h-screen md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden min-h-[500px] landscape:min-h-[400px]">
+    <section className="section !py-0 md:!py-20 relative bg-cover bg-center h-[100dvh] h-screen md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden min-h-[500px] landscape:min-h-[400px]">
       {/* Background images with fade transition */}
       {images.map((image, index) => (
         <div
@@ -45,9 +45,9 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
       
       <div className="container h-full lg:h-full relative z-30 pt-safe pb-safe">
         <div className="row h-full md:items-center justify-center text-center">
-          <div className="md:col-8 relative flex flex-col h-full md:h-auto justify-center md:block">
-            {/* Spacer for mobile positioning - responsive based on viewport height */}
-            <div className="flex-grow md:hidden" style={{ minHeight: 'clamp(60px, 15vh, 120px)' }}></div>
+          <div className="md:col-8 relative flex flex-col h-full md:h-auto justify-start md:justify-center md:block">
+            {/* Spacer for mobile positioning - positions text at 25% from top */}
+            <div className="md:hidden" style={{ height: '25vh' }}></div>
             <div className="relative">
               <h1
                 data-aos="fade-up-sm"
