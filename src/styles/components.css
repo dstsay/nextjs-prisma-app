@@ -153,3 +153,17 @@
   @apply prose-tr:border-border;
   @apply prose-td:relative prose-td:z-10 prose-td:px-3 prose-td:py-[18px];
 }
+
+/* Hero Button Styling */
+.hero-button-wrapper .btn {
+  @apply text-xl md:text-lg px-12 py-5 md:px-10 md:py-4 font-semibold shadow-lg hover:shadow-xl transition-all;
+}
+
+@media (max-width: 767px) {
+  .hero-button-wrapper {
+    @apply w-full;
+  }
+  .hero-button-wrapper .btn {
+    @apply w-full text-center;
+  }
+}

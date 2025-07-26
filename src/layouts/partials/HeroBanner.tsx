@@ -28,7 +28,7 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
   }, [images.length]);
 
   return (
-    <section className="section relative bg-cover bg-center md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden">
+    <section className="section relative bg-cover bg-center h-screen md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden">
       {/* Background images with fade transition */}
       {images.map((image, index) => (
         <div
@@ -43,14 +43,14 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
       {/* Translucent black overlay */}
       <div className="absolute inset-0 bg-black/30 z-10"></div>
       
-      <div className="container max-lg:mt-20 lg:h-full relative z-30">
-        <div className="row h-full items-center justify-center text-center">
-          <div className="md:col-8 relative">
+      <div className="container lg:h-full relative z-30">
+        <div className="row h-full md:items-center justify-center text-center">
+          <div className="md:col-8 relative pt-[35vh] md:pt-0">
             <div className="relative">
               <h1
                 data-aos="fade-up-sm"
                 data-aos-delay="100"
-                className="h2 md:h1 text-white lg:text-[5rem] xl:text-[6rem] font-medium xl:leading-[6.56rem] tracking-tight text-balance"
+                className="text-[2.75rem] md:h1 text-white lg:text-[5rem] xl:text-[6rem] font-medium leading-tight xl:leading-[6.56rem] tracking-tight text-balance"
               >
                 {banner.title}
               </h1>
@@ -111,20 +111,21 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
               )}
               {/* /Rotating Text Decoration */}
             </div>
-            <div className="flex flex-col items-center gap-6 mt-10">
+            <div className="flex flex-col items-center gap-6 md:gap-6 mt-8 md:mt-10">
               <p
                 data-aos="fade-up-sm"
                 data-aos-delay="300"
-                className="text-xl text-white/85 text-balance leading-[34px]"
+                className="text-2xl md:text-xl text-white text-balance leading-[34px] font-medium"
               >
                 {banner.content}
               </p>
-              <div data-aos="fade-up-sm" data-aos-delay="450">
+              <div data-aos="fade-up-sm" data-aos-delay="450" className="mt-12 md:mt-0 w-full md:w-auto">
                 <Button 
                   enable={banner.button.enable}
                   link={banner.button.link}
                   label={banner.button.label}
                   style="btn-primary"
+                  className="!text-xl md:!text-lg !px-12 !py-5 md:!px-10 md:!py-4 !font-semibold !w-full md:!w-auto !shadow-lg hover:!shadow-xl !transition-all"
                 />
               </div>
             </div>

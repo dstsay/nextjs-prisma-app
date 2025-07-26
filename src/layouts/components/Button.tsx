@@ -8,6 +8,7 @@ interface Props {
   style?: string;
   showIcon?: boolean;
   type?: "submit" | "reset" | "button";
+  className?: string;
 }
 
 const Button: React.FC<Props> = ({
@@ -17,24 +18,25 @@ const Button: React.FC<Props> = ({
   style,
   showIcon = true,
   type = "button",
+  className: customClassName,
 }) => {
-  const className = style ?? "btn-primary";
+  const baseClassName = style ?? "btn-primary";
 
   const bgHoverClass =
-    className === "btn-primary"
+    baseClassName === "btn-primary"
       ? "bg-[#8B6F33]"
-      : className === "btn-outline"
+      : baseClassName === "btn-outline"
         ? "bg-white/50"
-        : className === "btn-secondary"
+        : baseClassName === "btn-secondary"
           ? "bg-body"
           : "bg-body";
 
   const textHoverClass =
-    className === "btn-primary"
+    baseClassName === "btn-primary"
       ? "group-hover:text-white"
-      : className === "btn-outline"
+      : baseClassName === "btn-outline"
         ? "group-hover:text-primary"
-        : className === "btn-secondary"
+        : baseClassName === "btn-secondary"
           ? "group-hover:text-primary"
           : "group-hover:text-primary";
 
@@ -45,7 +47,7 @@ const Button: React.FC<Props> = ({
           <Link
             href={link}
             target={link.startsWith("http") ? "_blank" : "_self"}
-            className={`btn ${className} relative overflow-hidden inline-block group`}
+            className={`btn ${baseClassName} relative overflow-hidden inline-block group ${customClassName || ''}`}
           >
             <span className="absolute left-1/2 top-0 h-full w-0 -translate-x-1/2 transition-all duration-500 [transition-timing-function:cubic-bezier(1,0,1,1)] group-hover:w-[200%]">
               <span
@@ -78,7 +80,7 @@ const Button: React.FC<Props> = ({
         ) : (
           <button
             type={type}
-            className={`btn ${className} relative overflow-hidden inline-block group`}
+            className={`btn ${baseClassName} relative overflow-hidden inline-block group ${customClassName || ''}`}
             disabled={!enable}
           >
             <span className="absolute left-1/2 top-0 h-full w-0 -translate-x-1/2 transition-all duration-500 [transition-timing-function:cubic-bezier(1,0,1,1)] group-hover:w-[200%]">
