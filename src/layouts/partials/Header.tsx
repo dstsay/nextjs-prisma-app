@@ -69,157 +69,31 @@ export default function Header() {
           </svg>
         </label>
         
-        {/* Left side - Navigation menu */}
+        {/* Left side - Our Makeup Artists button */}
+        <div className="order-3 hidden lg:order-1 lg:flex lg:items-center lg:justify-start">
+          <Button
+            enable={true}
+            link="/artists"
+            label="Our Makeup Artists"
+            showIcon={false}
+          />
+        </div>
+        
+        {/* Mobile menu */}
         <ul
           id="nav-menu"
-          className="navbar-nav order-3 hidden pb-6 lg:order-1 lg:flex lg:w-auto lg:pb-0 lg:justify-start"
+          className="navbar-nav order-3 hidden pb-6 lg:hidden"
         >
-          {main.map((menu) => (
-            <React.Fragment key={menu.url}>
-              {menu.hasMegamenu !== undefined && menu.name ? (
-                <li
-                  className={`nav-item nav-dropdown group ${activeDropdown === menu.name ? "active" : ""}`}
-                >
-                  <span
-                    className={`nav-link inline-flex items-center ${
-                      menu.children
-                        ?.map((subchild) =>
-                          subchild.children?.some(
-                            (child) =>
-                              pathname === child.url ||
-                              pathname === `${child.url}/`
-                          )
-                        )
-                        .includes(true)
-                        ? "active"
-                        : ""
-                    }`}
-                    onClick={() => toggleDropdown(menu.name || "")}
-                  >
-                    {menu.name}
-                    <span className="arrow-icon">
-                      <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                      </svg>
-                    </span>
-                  </span>
-                  <div
-                    className={`mega-menu-wrapper max-lg:hidden max-lg:group-[.active]:flex max-lg:group-[.active]:flex-col lg:invisible lg:absolute lg:left-0 lg:flex ${menu.hasMegamenu ? "lg:items-center" : "lg:flex-col"} lg:opacity-0 lg:transition-all lg:duration-300 lg:group-hover:visible lg:group-hover:opacity-100 ${!menu.hasMegamenu ? " lg:p-4 lg:rounded-xl lg:border lg:border-border" : ""}`}
-                  >
-                    {menu.image && menu.hasMegamenu && (
-                      <div className="flex-shrink-0 mr-4">
-                        <ImageFallback
-                          src={menu.image}
-                          fallback="/images/image-placeholder.png"
-                          alt={"Preview"}
-                          className="aspect-square shadow max-lg:hidden"
-                          width={240}
-                          height={240}
-                        />
-                      </div>
-                    )}
-                    {menu.children?.map((subchild, index) => (
-                      <div
-                        key={index}
-                        className={`flex flex-col gap-5 ${!menu.hasMegamenu ? "w-full" : ""}`}
-                      >
-                        <ul
-                          className={`nav-dropdown-list ${
-                            menu.hasMegamenu
-                              ? "gap-x-8 sm:columns-2 md:columns-3 lg:grid lg:grid-cols-[repeat(3,_1fr)]"
-                              : "flex w-full h-full flex-col gap-2 lg:max-h-[400px] overflow-y-auto pr-2"
-                          }`}
-                        >
-                          {subchild.children?.map((child) => (
-                            <li className="nav-dropdown-item" key={child.url}>
-                              <Link
-                                href={child.url || "#"}
-                                aria-label={child.name || "preview"}
-                                className={`nav-dropdown-link block ${
-                                  !menu.hasMegamenu
-                                    ? "py-2 px-3 hover:bg-secondary/5 rounded-lg whitespace-nowrap"
-                                    : ""
-                                } ${
-                                  pathname === `${child.url}/` ||
-                                  pathname === child.url
-                                    ? "active"
-                                    : ""
-                                }`}
-                              >
-                                {child.name}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                </li>
-              ) : menu.hasChildren && menu.name ? (
-                <li
-                  className={`nav-item nav-dropdown group relative ${activeDropdown === menu.name ? "active" : ""}`}
-                >
-                  <span
-                    className={`nav-link inline-flex items-center ${
-                      menu.children
-                        ?.map(({ url }) => url)
-                        .includes(pathname ?? "") ||
-                      menu.children
-                        ?.map(({ url }) => `${url}/`)
-                        .includes(pathname ?? "")
-                        ? "active"
-                        : ""
-                    }`}
-                    onClick={() => toggleDropdown(menu.name || "")}
-                  >
-                    {menu.name}
-                    <span className="arrow-icon">
-                      <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                      </svg>
-                    </span>
-                  </span>
-                  <ul
-                    className={`nav-dropdown-list flex flex-col gap-1 rounded-xl border border-border bg-primary p-3 max-lg:mb-3 max-lg:hidden max-lg:w-[300px] max-lg:group-[.active]:flex max-lg:group-[.active]:flex-col lg:invisible lg:absolute lg:left-0 lg:flex lg:opacity-0 lg:transition-all lg:duration-300 lg:group-hover:visible lg:group-hover:opacity-100`}
-                  >
-                    {menu.children?.map((child, i) => (
-                      <li key={i} className={`nav-dropdown-item`}>
-                        <Link
-                          href={child.url || "#"}
-                          aria-label={child.name}
-                          className={`nav-dropdown-link rounded-xl !px-4 !py-1.5 hover:bg-secondary/5 ${
-                            ((pathname === `${child.url}/` ||
-                              pathname === child.url) &&
-                              "active") ||
-                            ""
-                          }`}
-                        >
-                          {child.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ) : (
-                menu.name && (
-                  <li className="nav-item">
-                    <Link
-                      href={menu.url || "#"}
-                      className={`nav-link block ${
-                        (pathname === `${menu.url}/` ||
-                          pathname === menu.url) &&
-                        "active"
-                      }`}
-                    >
-                      {menu.name}
-                    </Link>
-                  </li>
-                )
-              )}
-            </React.Fragment>
-          ))}
+          <li className="mt-4 inline-block">
+            <Link
+              className="btn btn-primary btn-sm"
+              href="/artists"
+            >
+              Our Makeup Artists
+            </Link>
+          </li>
           {navigation_button.enable && (
-            <li className="mt-4 inline-block lg:hidden">
+            <li className="mt-4 inline-block">
               <Link
                 className="btn btn-primary btn-sm"
                 href={navigation_button.link}

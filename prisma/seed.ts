@@ -28,11 +28,19 @@ async function main() {
       password: await bcrypt.hash('password123', 10),
       email: 'sarah@goldiegrace.com',
       name: 'Sarah Johnson',
-      bio: 'Professional makeup artist with 10 years experience specializing in bridal and editorial looks.',
+      bio: 'Professional makeup artist with 10 years experience specializing in bridal and editorial looks. I believe in enhancing natural beauty and creating timeless, elegant makeup that photographs beautifully. My approach is personalized to each client\'s unique features and style preferences.',
       specialties: ['Bridal', 'Editorial', 'Natural Glam'],
       yearsExperience: 10,
       hourlyRate: 150,
-      profileImage: '/images/artists/sarah.jpg',
+      profileImage: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400',
+      portfolioImages: [
+        'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800',
+        'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=800',
+        'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=800',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800'
+      ],
+      location: 'New York, NY',
+      badges: ['Certified Pro', 'Best of Beauty 2024'],
       availability: {
         create: [
           { dayOfWeek: 1, startTime: '09:00', endTime: '17:00' }, // Monday
@@ -51,11 +59,19 @@ async function main() {
       password: await bcrypt.hash('password123', 10),
       email: 'maria@goldiegrace.com',
       name: 'Maria Rodriguez',
-      bio: 'Celebrity makeup artist known for glamorous red carpet looks and creative editorial work.',
+      bio: 'Celebrity makeup artist known for glamorous red carpet looks and creative editorial work. With 15 years in the industry, I\'ve worked with A-list celebrities and top fashion magazines. My signature style combines bold glamour with innovative techniques.',
       specialties: ['Glam', 'Red Carpet', 'Creative', 'Special Effects'],
       yearsExperience: 15,
       hourlyRate: 250,
-      profileImage: '/images/artists/maria.jpg',
+      profileImage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400',
+      portfolioImages: [
+        'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800',
+        'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800',
+        'https://images.unsplash.com/photo-1512361436605-a484bdb34b5f?w=800',
+        'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800'
+      ],
+      location: 'Los Angeles, CA',
+      badges: ['Celebrity Artist', 'Sponsored'],
       availability: {
         create: [
           { dayOfWeek: 1, startTime: '10:00', endTime: '18:00' },
@@ -67,7 +83,100 @@ async function main() {
     }
   })
 
-  // Create sample client
+  // Create additional makeup artists
+  const artist3 = await prisma.makeupArtist.create({
+    data: {
+      username: 'jessica_artistry',
+      password: await bcrypt.hash('password123', 10),
+      email: 'jessica@goldiegrace.com',
+      name: 'Jessica Chen',
+      bio: 'Specializing in Asian beauty techniques and K-beauty inspired looks. I focus on achieving that perfect "glass skin" glow and subtle enhancements that bring out your best features.',
+      specialties: ['K-Beauty', 'Natural Glow', 'Asian Techniques', 'Skincare Focus'],
+      yearsExperience: 7,
+      hourlyRate: 120,
+      profileImage: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400',
+      portfolioImages: [
+        'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800',
+        'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=800',
+        'https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=800',
+        'https://images.unsplash.com/photo-1620065416784-2e16cd14cf0f?w=800'
+      ],
+      location: 'San Francisco, CA',
+      badges: ['Rising Star', 'Skincare Expert'],
+      isAvailable: true,
+      availability: {
+        create: [
+          { dayOfWeek: 2, startTime: '11:00', endTime: '19:00' },
+          { dayOfWeek: 3, startTime: '11:00', endTime: '19:00' },
+          { dayOfWeek: 4, startTime: '11:00', endTime: '19:00' },
+          { dayOfWeek: 5, startTime: '11:00', endTime: '19:00' },
+          { dayOfWeek: 6, startTime: '09:00', endTime: '17:00' },
+        ]
+      }
+    }
+  })
+
+  const artist4 = await prisma.makeupArtist.create({
+    data: {
+      username: 'alex_pro',
+      password: await bcrypt.hash('password123', 10),
+      email: 'alex@goldiegrace.com',
+      name: 'Alexandra Thompson',
+      bio: 'Fashion week veteran with expertise in avant-garde and editorial makeup. I push boundaries while ensuring wearable, camera-ready looks.',
+      specialties: ['Fashion', 'Avant-garde', 'Editorial', 'Runway'],
+      yearsExperience: 12,
+      hourlyRate: 200,
+      profileImage: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400',
+      portfolioImages: [
+        'https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?w=800',
+        'https://images.unsplash.com/photo-1562572159-4efc207f5aff?w=800',
+        'https://images.unsplash.com/photo-1583147610149-781ac108dfc6?w=800',
+        'https://images.unsplash.com/photo-1597586124394-fbd6ef244026?w=800'
+      ],
+      location: 'New York, NY',
+      badges: ['Fashion Week Regular', 'Editorial Expert', 'Sponsored'],
+      isAvailable: true,
+      availability: {
+        create: [
+          { dayOfWeek: 1, startTime: '08:00', endTime: '16:00' },
+          { dayOfWeek: 2, startTime: '08:00', endTime: '16:00' },
+          { dayOfWeek: 3, startTime: '08:00', endTime: '16:00' },
+          { dayOfWeek: 4, startTime: '08:00', endTime: '16:00' },
+        ]
+      }
+    }
+  })
+
+  const artist5 = await prisma.makeupArtist.create({
+    data: {
+      username: 'taylor_mua',
+      password: await bcrypt.hash('password123', 10),
+      email: 'taylor@goldiegrace.com',
+      name: 'Taylor Williams',
+      bio: 'Your go-to artist for everyday glam and special occasions. I believe makeup should be fun, accessible, and empowering for everyone!',
+      specialties: ['Everyday Glam', 'Special Occasions', 'Tutorials', 'Teen Makeup'],
+      yearsExperience: 5,
+      hourlyRate: 90,
+      profileImage: 'https://images.unsplash.com/photo-1530785602389-07594beb8b73?w=400',
+      portfolioImages: [
+        'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800',
+        'https://images.unsplash.com/photo-1481214110143-ed630356e1bb?w=800',
+        'https://images.unsplash.com/photo-1512310604669-443f26c35f52?w=800',
+        'https://images.unsplash.com/photo-1576828831022-ca41d3905fb7?w=800'
+      ],
+      location: 'Chicago, IL',
+      badges: ['Budget Friendly', 'Teen Specialist'],
+      isAvailable: false, // Currently unavailable
+      availability: {
+        create: [
+          { dayOfWeek: 0, startTime: '10:00', endTime: '18:00' }, // Sunday
+          { dayOfWeek: 6, startTime: '10:00', endTime: '18:00' }, // Saturday
+        ]
+      }
+    }
+  })
+
+  // Create sample clients
   const client1 = await prisma.client.create({
     data: {
       username: 'jane_doe',
@@ -75,7 +184,39 @@ async function main() {
       email: 'jane@example.com',
       name: 'Jane Doe',
       phone: '+1234567890',
-      profileImage: '/images/clients/jane.jpg'
+      profileImage: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400'
+    }
+  })
+
+  const client2 = await prisma.client.create({
+    data: {
+      username: 'emily_client',
+      password: await bcrypt.hash('password123', 10),
+      email: 'emily@example.com',
+      name: 'Emily Watson',
+      phone: '+1234567891',
+      profileImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400'
+    }
+  })
+
+  const client3 = await prisma.client.create({
+    data: {
+      username: 'sophia_m',
+      password: await bcrypt.hash('password123', 10),
+      email: 'sophia@example.com',
+      name: 'Sophia Martinez',
+      phone: '+1234567892',
+      profileImage: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=400'
+    }
+  })
+
+  const client4 = await prisma.client.create({
+    data: {
+      username: 'olivia_j',
+      password: await bcrypt.hash('password123', 10),
+      email: 'olivia@example.com',
+      name: 'Olivia Johnson',
+      phone: '+1234567893',
     }
   })
 
@@ -287,13 +428,98 @@ async function main() {
     }
   })
 
-  // Create a sample review
+  // Create varied reviews for different ratings
+  // Sarah - High rating (4.7 average)
+  await prisma.review.createMany({
+    data: [
+      {
+        clientId: client1.id,
+        artistId: artist1.id,
+        rating: 5,
+        comment: 'Sarah was amazing! She really understood my style and taught me techniques I can actually use every day.'
+      },
+      {
+        clientId: client2.id,
+        artistId: artist1.id,
+        rating: 5,
+        comment: 'Best makeup artist I\'ve ever worked with. My wedding makeup was flawless!'
+      },
+      {
+        clientId: client3.id,
+        artistId: artist1.id,
+        rating: 4,
+        comment: 'Great experience, very professional. Would definitely recommend.'
+      }
+    ]
+  })
+
+  // Maria - Perfect rating (5.0 average)
+  await prisma.review.createMany({
+    data: [
+      {
+        clientId: client1.id,
+        artistId: artist2.id,
+        rating: 5,
+        comment: 'Maria is a true artist! My red carpet look was absolutely stunning.'
+      },
+      {
+        clientId: client4.id,
+        artistId: artist2.id,
+        rating: 5,
+        comment: 'Celebrity treatment from start to finish. Worth every penny!'
+      }
+    ]
+  })
+
+  // Jessica - Good rating (4.3 average)
+  await prisma.review.createMany({
+    data: [
+      {
+        clientId: client2.id,
+        artistId: artist3.id,
+        rating: 5,
+        comment: 'Jessica\'s K-beauty techniques gave me the glass skin I\'ve always wanted!'
+      },
+      {
+        clientId: client3.id,
+        artistId: artist3.id,
+        rating: 4,
+        comment: 'Love the natural glow she achieved. Very knowledgeable about skincare too.'
+      },
+      {
+        clientId: client4.id,
+        artistId: artist3.id,
+        rating: 4,
+        comment: 'Good session, learned a lot about Korean beauty trends.'
+      }
+    ]
+  })
+
+  // Alexandra - High rating (4.5 average)
+  await prisma.review.createMany({
+    data: [
+      {
+        clientId: client1.id,
+        artistId: artist4.id,
+        rating: 5,
+        comment: 'Alex created the most incredible editorial look for my photoshoot!'
+      },
+      {
+        clientId: client2.id,
+        artistId: artist4.id,
+        rating: 4,
+        comment: 'Very creative and professional. Perfect for fashion events.'
+      }
+    ]
+  })
+
+  // Taylor - New artist, one review (3.0 average)
   await prisma.review.create({
     data: {
-      clientId: client1.id,
-      artistId: artist1.id,
-      rating: 5,
-      comment: 'Sarah was amazing! She really understood my style and taught me techniques I can actually use every day.'
+      clientId: client3.id,
+      artistId: artist5.id,
+      rating: 3,
+      comment: 'Good for beginners, but I was expecting more advanced techniques.'
     }
   })
 
@@ -301,15 +527,27 @@ async function main() {
   const quizCount = await prisma.quiz.count()
   const questionCount = await prisma.question.count()
   const artistCount = await prisma.makeupArtist.count()
+  const clientCount = await prisma.client.count()
+  const reviewCount = await prisma.review.count()
   
   console.log('Database seeded successfully!')
   console.log(`- ${quizCount} quizzes created`)
   console.log(`- ${questionCount} questions created`)
   console.log(`- ${artistCount} makeup artists created`)
+  console.log(`- ${clientCount} clients created`)
+  console.log(`- ${reviewCount} reviews created`)
   console.log('\nSample users created:')
-  console.log('- Artist: sarah_beauty / password123')
-  console.log('- Artist: maria_glam / password123')  
-  console.log('- Client: jane_doe / password123')
+  console.log('\nMakeup Artists:')
+  console.log('- sarah_beauty / password123 (4.7★ rating)')
+  console.log('- maria_glam / password123 (5.0★ rating)')
+  console.log('- jessica_artistry / password123 (4.3★ rating)')
+  console.log('- alex_pro / password123 (4.5★ rating)')
+  console.log('- taylor_mua / password123 (3.0★ rating)')
+  console.log('\nClients:')
+  console.log('- jane_doe / password123')
+  console.log('- emily_client / password123')
+  console.log('- sophia_m / password123')
+  console.log('- olivia_j / password123')
 }
 
 main()

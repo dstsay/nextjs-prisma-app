@@ -1,3 +1,6 @@
+// Import jest-dom matchers
+require('@testing-library/jest-dom');
+
 // Import the shared prisma instance
 const { prisma } = require('./src/lib/db');
 

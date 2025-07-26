@@ -27,6 +27,30 @@ export async function createTestArtist(overrides: any = {}) {
       specialties: ['Bridal', 'Natural'],
       yearsExperience: 5,
       hourlyRate: 100,
+      portfolioImages: [
+        '/images/portfolio1.jpg',
+        '/images/portfolio2.jpg',
+        '/images/portfolio3.jpg',
+      ],
+      location: 'New York, NY',
+      badges: ['Certified Pro', 'Best of Beauty 2024'],
+      ...overrides,
+    },
+  });
+}
+
+export async function createTestReview(
+  clientId: string,
+  artistId: string,
+  overrides: any = {}
+) {
+  return prisma.review.create({
+    data: {
+      clientId,
+      artistId,
+      rating: 5,
+      comment: 'Great service!',
+      isPublished: true,
       ...overrides,
     },
   });
