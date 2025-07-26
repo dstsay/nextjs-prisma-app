@@ -28,7 +28,7 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
   }, [images.length]);
 
   return (
-    <section className="section relative bg-cover bg-center h-[100dvh] h-screen md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden min-h-[600px]">
+    <section className="section relative bg-cover bg-center h-[100dvh] h-screen md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden min-h-[500px] landscape:min-h-[400px]">
       {/* Background images with fade transition */}
       {images.map((image, index) => (
         <div
@@ -43,16 +43,16 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
       {/* Translucent black overlay */}
       <div className="absolute inset-0 bg-black/30 z-10"></div>
       
-      <div className="container h-full lg:h-full relative z-30">
+      <div className="container h-full lg:h-full relative z-30 pt-safe pb-safe">
         <div className="row h-full md:items-center justify-center text-center">
           <div className="md:col-8 relative flex flex-col h-full md:h-auto justify-center md:block">
-            {/* Spacer for mobile positioning */}
-            <div className="flex-grow md:hidden" style={{ minHeight: '15vh' }}></div>
+            {/* Spacer for mobile positioning - responsive based on viewport height */}
+            <div className="flex-grow md:hidden" style={{ minHeight: 'clamp(60px, 15vh, 120px)' }}></div>
             <div className="relative">
               <h1
                 data-aos="fade-up-sm"
                 data-aos-delay="100"
-                className="text-[2.75rem] md:h1 text-white lg:text-[5rem] xl:text-[6rem] font-medium leading-tight xl:leading-[6.56rem] tracking-tight text-balance"
+                className="text-[2.25rem] min-[380px]:text-[2.75rem] md:h1 text-white lg:text-[5rem] xl:text-[6rem] font-medium leading-tight xl:leading-[6.56rem] tracking-tight text-balance"
               >
                 {banner.title}
               </h1>
@@ -117,7 +117,7 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
               <p
                 data-aos="fade-up-sm"
                 data-aos-delay="300"
-                className="text-2xl md:text-xl text-white text-balance leading-[34px] font-medium"
+                className="text-xl min-[380px]:text-2xl md:text-xl text-white text-balance leading-[28px] min-[380px]:leading-[34px] font-medium"
               >
                 {banner.content}
               </p>
@@ -127,12 +127,12 @@ const HeroBanner = ({ banner }: { banner: BannerData }) => {
                   link={banner.button.link}
                   label={banner.button.label}
                   style="btn-primary"
-                  className="!text-xl md:!text-lg !px-12 !py-5 md:!px-10 md:!py-4 !font-semibold !w-full md:!w-auto !shadow-lg hover:!shadow-xl !transition-all"
+                  className="!text-lg min-[380px]:!text-xl md:!text-lg !px-10 min-[380px]:!px-12 !py-4 min-[380px]:!py-5 md:!px-10 md:!py-4 !font-semibold !w-full md:!w-auto !shadow-lg hover:!shadow-xl !transition-all"
                 />
               </div>
             </div>
-            {/* Bottom spacer for mobile */}
-            <div className="md:hidden" style={{ minHeight: '10vh' }}></div>
+            {/* Bottom spacer for mobile - responsive based on viewport height */}
+            <div className="md:hidden" style={{ minHeight: 'clamp(40px, 10vh, 80px)' }}></div>
           </div>
         </div>
       </div>
