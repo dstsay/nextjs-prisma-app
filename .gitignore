@@ -40,5 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# compiled js files from typescript
+lib/**/*.js
+lib/**/*.js.map
+
 # prisma
 prisma/migrations/dev/
