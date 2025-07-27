@@ -15,13 +15,11 @@ export interface CloudinaryTransformation {
 }
 
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-const DEPLOYMENT_ID = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.NEXT_PUBLIC_BUILD_ID || 'dev';
 
 // Generate Cloudinary URL on client side
 export function getCloudinaryUrl(
   publicId: string,
-  transformations: CloudinaryTransformation[] = [],
-  version?: string | number
+  transformations: CloudinaryTransformation[] = []
 ): string {
   if (!CLOUD_NAME) {
     console.error('NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME is not set');
@@ -51,18 +49,9 @@ export function getCloudinaryUrl(
     .join('/');
 
   const baseUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload`;
-  let url = transformStr 
+  const url = transformStr 
     ? `${baseUrl}/${transformStr}/${publicId}`
     : `${baseUrl}/${publicId}`;
-
-  // Add version parameter if provided
-  if (version) {
-    url += `?v=${version}`;
-  } else if (DEPLOYMENT_ID !== 'dev') {
-    // In production, use deployment ID as cache buster
-    // This ensures new deployments get fresh images
-    url += `?d=${DEPLOYMENT_ID.substring(0, 8)}`;
-  }
 
   return url;
 }
@@ -70,8 +59,7 @@ export function getCloudinaryUrl(
 // Generate optimized URL for an image
 export function getOptimizedUrl(
   publicId: string,
-  transformation?: CloudinaryTransformation,
-  version?: string | number
+  transformation?: CloudinaryTransformation
 ): string {
   const defaultTransform: CloudinaryTransformation = {
     quality: 'auto',
@@ -83,14 +71,13 @@ export function getOptimizedUrl(
     flags: ['progressive'],
   };
   
-  return getCloudinaryUrl(publicId, [transformation || defaultTransform], version);
+  return getCloudinaryUrl(publicId, [transformation || defaultTransform]);
 }
 
 // Generate responsive image URLs
 export function getResponsiveUrls(
   publicId: string,
-  baseTransformation: CloudinaryTransformation = {},
-  version?: string | number
+  baseTransformation: CloudinaryTransformation = {}
 ): {
   srcSet: string;
   sizes: string;
@@ -99,13 +86,13 @@ export function getResponsiveUrls(
   const widths = [320, 640, 768, 1024, 1280, 1536];
   const srcSet = widths
     .map((width) => {
-      const url = getCloudinaryUrl(publicId, [{ ...baseTransformation, width, crop: 'limit' }], version);
+      const url = getCloudinaryUrl(publicId, [{ ...baseTransformation, width, crop: 'limit' }]);
       return `${url} ${width}w`;
     })
     .join(', ');
 
   const sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
-  const src = getCloudinaryUrl(publicId, [{ ...baseTransformation, width: 1024 }], version);
+  const src = getCloudinaryUrl(publicId, [{ ...baseTransformation, width: 1024 }]);
 
   return { srcSet, sizes, src };
 }

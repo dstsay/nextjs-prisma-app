@@ -4,7 +4,6 @@
 import type { ImageLoaderProps } from 'next/image';
 
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-const DEPLOYMENT_ID = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.NEXT_PUBLIC_BUILD_ID || 'dev';
 
 export interface CloudinaryLoaderProps extends ImageLoaderProps {
   src: string; // This will be the Cloudinary public ID
@@ -49,14 +48,7 @@ export default function cloudinaryLoader({
   const transformation = params.join(',');
   
   // Build the URL
-  let url = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transformation}/${src}`;
-  
-  // Add deployment ID for cache busting in production
-  if (DEPLOYMENT_ID !== 'dev') {
-    url += `?d=${DEPLOYMENT_ID.substring(0, 8)}`;
-  }
-  
-  return url;
+  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transformation}/${src}`;
 }
 
 // Blur data URL generator for placeholder
