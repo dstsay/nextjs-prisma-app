@@ -16,6 +16,7 @@ This is a Next.js 15 application with TypeScript, Prisma ORM, and Tailwind CSS f
 6. Make every task and code change you do as simple as possible. We want to avoid making any massive or complex changes. Every change should impact as little code as possible. Everything is about simplicity.
 7. Finally, add a review section to the [todo.md](http://todo.md/) file with a summary of the changes you made and any other relevant information.
 
+## Wh
 
 ## Commands
 
@@ -55,6 +56,7 @@ npx prisma studio       # Open Prisma Studio GUI
   - `schema.prisma`: Database models and configuration
 - `/public`: Static assets
 
+
 ### Key Design Patterns
 
 1. **Prisma Client Singleton**: The Prisma client is initialized as a singleton in `/lib/prisma.ts` to prevent multiple instances in development.
@@ -78,6 +80,8 @@ npx prisma studio       # Open Prisma Studio GUI
 
 ### Environment Variables
 
+- Local, Staging, and Production environment variables in .env.local, .env.staging and .env.production files respectively
+
 Required environment variables:
 - `DATABASE_URL`: Database connection string (PostgreSQL, MySQL, SQLite, etc.)
 
@@ -87,3 +91,8 @@ Required environment variables:
 2. Run `npx prisma generate` to update the TypeScript types
 3. Use `prisma` client from `@/lib/prisma` in your Server Components or API routes
 4. For client-side data fetching, create Server Actions or API routes in `/app/api`
+
+
+## Deployment
+1. Project is set up to be deployed to Vercel, Vercel production build will automatically occur once code is pushed to my github online.
+2. Project utilizes Vercel Postgres with automatic database migrations during build.

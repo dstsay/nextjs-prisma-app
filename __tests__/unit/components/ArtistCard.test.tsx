@@ -27,8 +27,8 @@ describe('ArtistCard Component', () => {
   const mockArtist = {
     id: '1',
     name: 'Jane Doe',
-    profileImage: '/images/profile.jpg',
-    portfolioImages: ['/images/portfolio1.jpg', '/images/portfolio2.jpg'],
+    profileImage: 'goldiegrace/profile-images/test/jane-doe',
+    portfolioImages: ['goldiegrace/portfolio/test/portfolio1', 'goldiegrace/portfolio/test/portfolio2'],
     location: 'New York, NY',
     badges: ['Certified Pro', 'Best of Beauty 2024', 'Sponsored'],
     bio: 'Professional makeup artist with over 10 years of experience specializing in bridal and special event makeup. Lorem ipsum dolor sit amet, consectetur adipiscing elit. This is a long bio that should be truncated.',
@@ -198,7 +198,7 @@ describe('ArtistCard Component', () => {
 
       const carousels = screen.getAllByTestId('image-carousel');
       expect(carousels.length).toBeGreaterThan(0);
-      expect(carousels[0]).toHaveTextContent('/images/portfolio1.jpg');
+      expect(carousels[0]).toHaveTextContent('goldiegrace/portfolio/test/portfolio1');
     });
 
     it('should handle click on Book Session button', () => {

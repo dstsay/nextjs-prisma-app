@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Button from "@/layouts/components/Button";
+import CloudinaryImage from "../../../components/CloudinaryImage";
 
 interface BannerData {
   title: string;
@@ -16,29 +17,45 @@ interface BannerData {
 }
 
 const HeroBanner = ({ banner }: { banner: BannerData }) => {
-  const images = ["/images/banner2.jpeg", "/images/banner.jpg"];
+  // Cloudinary public IDs for banner images
+  const cloudinaryImages = [
+    "goldiegrace/static/banner2",
+    "goldiegrace/static/banner"
+  ];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % cloudinaryImages.length);
     }, 5000); // Change image every 5 seconds
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [cloudinaryImages.length]);
 
   return (
-    <section className="section !py-0 md:!py-20 relative bg-cover bg-center h-[100dvh] h-screen md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden min-h-[500px] landscape:min-h-[400px]">
+    <section className="section !py-0 md:!py-20 relative h-[100dvh] h-screen md:h-[calc(65svh)] lg:h-[calc(100svh_-_28px)] overflow-hidden min-h-[500px] landscape:min-h-[400px]">
       {/* Background images with fade transition */}
-      {images.map((image, index) => (
+      {cloudinaryImages.map((publicId, index) => (
         <div
-          key={index}
-          className="absolute inset-0 bg-cover bg-center transition-opacity duration-[2000ms]"
-          style={{
-            backgroundImage: `url(${image})`,
-            opacity: index === currentImageIndex ? 1 : 0,
-          }}
-        />
+          key={publicId}
+          className={`absolute inset-0 transition-opacity duration-[2000ms] ${
+            index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <CloudinaryImage
+            publicId={publicId}
+            alt={`Banner ${index + 1}`}
+            fill
+            className="object-cover"
+            transformation={{ 
+              quality: 'auto:good',
+              format: 'auto',
+              crop: 'fill',
+            }}
+            priority={index === 0}
+            sizes="100vw"
+          />
+        </div>
       ))}
       {/* Translucent black overlay */}
       <div className="absolute inset-0 bg-black/30 z-10"></div>

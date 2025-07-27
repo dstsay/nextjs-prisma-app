@@ -1,26 +1,13 @@
-// Import jest-dom matchers
-require('@testing-library/jest-dom');
+// Learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom'
+import dotenv from 'dotenv'
+import path from 'path'
 
-// Import the shared prisma instance
-const { prisma } = require('./src/lib/db');
+// Load test environment variables
+dotenv.config({ path: path.resolve(process.cwd(), '.env.test') })
 
-// Reset database between tests
-beforeEach(async () => {
-  await prisma.$transaction([
-    prisma.answer.deleteMany(),
-    prisma.quizResponse.deleteMany(),
-    prisma.answerOption.deleteMany(),
-    prisma.question.deleteMany(),
-    prisma.quiz.deleteMany(),
-    prisma.consultation.deleteMany(),
-    prisma.appointment.deleteMany(),
-    prisma.review.deleteMany(),
-    prisma.availability.deleteMany(),
-    prisma.client.deleteMany(),
-    prisma.makeupArtist.deleteMany(),
-  ]);
-});
-
-afterAll(async () => {
-  await prisma.$disconnect();
-});
+// Mock environment variables for Cloudinary
+process.env.CLOUDINARY_CLOUD_NAME = 'test_cloud'
+process.env.CLOUDINARY_API_KEY = 'test_key'
+process.env.CLOUDINARY_API_SECRET = 'test_secret'
+process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = 'test_cloud'

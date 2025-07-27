@@ -7,9 +7,9 @@ import ImageCarousel from '@/components/ImageCarousel';
 
 describe('ImageCarousel Component', () => {
   const mockImages = [
-    '/images/portfolio1.jpg',
-    '/images/portfolio2.jpg',
-    '/images/portfolio3.jpg',
+    'goldiegrace/portfolio/test/portfolio1',
+    'goldiegrace/portfolio/test/portfolio2',
+    'goldiegrace/portfolio/test/portfolio3',
   ];
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe('ImageCarousel Component', () => {
     render(<ImageCarousel images={mockImages} />);
     const image = screen.getByAltText('Portfolio 1');
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute('src', '/images/portfolio1.jpg');
+    expect(image).toHaveAttribute('src', expect.stringContaining('res.cloudinary.com'));
   });
 
   it('should show placeholder when no images provided', () => {
@@ -43,7 +43,7 @@ describe('ImageCarousel Component', () => {
     fireEvent.click(nextButton);
     
     const image = screen.getByAltText('Portfolio 2');
-    expect(image).toHaveAttribute('src', '/images/portfolio2.jpg');
+    expect(image).toHaveAttribute('src', expect.stringContaining('res.cloudinary.com'));
   });
 
   it('should navigate to previous image when previous button clicked', () => {
@@ -54,7 +54,7 @@ describe('ImageCarousel Component', () => {
     
     // Should go to last image when clicking previous from first
     const image = screen.getByAltText('Portfolio 3');
-    expect(image).toHaveAttribute('src', '/images/portfolio3.jpg');
+    expect(image).toHaveAttribute('src', expect.stringContaining('res.cloudinary.com'));
   });
 
   it('should wrap around when navigating past last image', () => {
@@ -68,7 +68,7 @@ describe('ImageCarousel Component', () => {
     fireEvent.click(nextButton); // wrap to image 1
     
     const image = screen.getByAltText('Portfolio 1');
-    expect(image).toHaveAttribute('src', '/images/portfolio1.jpg');
+    expect(image).toHaveAttribute('src', expect.stringContaining('res.cloudinary.com'));
   });
 
   it('should auto-play through images when enabled', async () => {

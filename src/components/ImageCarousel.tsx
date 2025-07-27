@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import CloudinaryImage from '../../components/CloudinaryImage';
 
 interface ImageCarouselProps {
   images: string[];
@@ -45,10 +46,13 @@ export default function ImageCarousel({
 
   return (
     <div className="relative w-full h-full group">
-      <img
-        src={images[currentIndex]}
+      <CloudinaryImage
+        publicId={images[currentIndex]}
         alt={`Portfolio ${currentIndex + 1}`}
+        fill
         className="w-full h-full object-cover"
+        transformation={{ crop: 'fill', quality: 'auto' }}
+        priority={currentIndex === 0}
       />
       
       {images.length > 1 && (

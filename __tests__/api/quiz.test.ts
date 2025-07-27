@@ -1,4 +1,4 @@
-import { GET } from '@/app/api/quiz/route';
+import { GET } from '../../app/api/quiz/route';
 import { prisma } from '@/lib/db';
 import { NextRequest } from 'next/server';
 

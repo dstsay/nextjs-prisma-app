@@ -3,6 +3,30 @@ import bcrypt from 'bcryptjs';
 import { createTestClient, createTestArtist } from '../../fixtures/testData';
 
 describe('Client Model', () => {
+  beforeEach(async () => {
+    // Clean up the database before each test - order matters due to foreign keys
+    await prisma.consultation.deleteMany({});
+    await prisma.appointment.deleteMany({});
+    await prisma.answer.deleteMany({});
+    await prisma.quizResponse.deleteMany({});
+    await prisma.review.deleteMany({});
+    await prisma.availability.deleteMany({});
+    await prisma.client.deleteMany({});
+    await prisma.makeupArtist.deleteMany({});
+  });
+
+  afterAll(async () => {
+    // Clean up after all tests and disconnect
+    await prisma.consultation.deleteMany({});
+    await prisma.appointment.deleteMany({});
+    await prisma.answer.deleteMany({});
+    await prisma.quizResponse.deleteMany({});
+    await prisma.review.deleteMany({});
+    await prisma.availability.deleteMany({});
+    await prisma.client.deleteMany({});
+    await prisma.makeupArtist.deleteMany({});
+    await prisma.$disconnect();
+  });
   describe('Creation', () => {
     it('should create a client with valid data', async () => {
       const timestamp = Date.now();

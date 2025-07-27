@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import ImageCarousel from './ImageCarousel';
 import RatingStars from './RatingStars';
+import CloudinaryImage from '../../components/CloudinaryImage';
 
 interface ArtistCardProps {
   artist: {
@@ -35,11 +36,16 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
         <div className="relative h-64">
           <ImageCarousel images={artist.portfolioImages} />
           {artist.profileImage && (
-            <img
-              src={artist.profileImage}
-              alt={artist.name}
-              className="absolute bottom-4 left-4 w-16 h-16 rounded-full border-4 border-white object-cover"
-            />
+            <div className="absolute bottom-4 left-4 w-16 h-16 rounded-full border-4 border-white overflow-hidden">
+              <CloudinaryImage
+                publicId={artist.profileImage}
+                alt={artist.name}
+                width={64}
+                height={64}
+                className="w-full h-full object-cover"
+                transformation={{ crop: 'fill', gravity: 'face' }}
+              />
+            </div>
           )}
           {artist.badges.includes("Sponsored") && (
             <span className="absolute top-4 right-4 bg-black/70 text-white text-xs px-2 py-1 rounded">
@@ -85,11 +91,16 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
           <div className="flex-1 pr-4">
             <div className="flex items-start gap-4 mb-4">
               {artist.profileImage && (
-                <img
-                  src={artist.profileImage}
-                  alt={artist.name}
-                  className="w-16 h-16 rounded-full object-cover"
-                />
+                <div className="w-16 h-16 rounded-full overflow-hidden">
+                  <CloudinaryImage
+                    publicId={artist.profileImage}
+                    alt={artist.name}
+                    width={64}
+                    height={64}
+                    className="w-full h-full object-cover"
+                    transformation={{ crop: 'fill', gravity: 'face' }}
+                  />
+                </div>
               )}
               <div>
                 <h3 className="text-xl font-semibold mb-1">{artist.name}</h3>

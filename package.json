@@ -22,7 +22,8 @@
     "test:unit": "jest __tests__/unit",
     "test:integration": "jest __tests__/integration",
     "test:db": "dotenv -e .env.test -- jest",
-    "test:ci": "jest --ci --coverage --maxWorkers=2"
+    "test:ci": "jest --ci --coverage --maxWorkers=2",
+    "test:cloudinary": "jest cloudinary"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -32,11 +33,13 @@
     "@vercel/postgres": "^0.10.0",
     "aos": "^2.3.4",
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.7.0",
     "date-fns": "^4.1.0",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
     "marked": "^16.0.0",
     "next": "15.3.5",
+    "next-cloudinary": "^6.16.0",
     "next-mdx-remote": "^5.0.0",
     "react": "^18",
     "react-countup": "^6.5.3",
@@ -50,7 +53,7 @@
     "@jest/globals": "^30.0.4",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
-    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
     "@types/aos": "^3.0.7",
     "@types/bcryptjs": "^3.0.0",
@@ -64,7 +67,7 @@
     "eslint": "^8",
     "eslint-config-next": "15.3.5",
     "jest": "^30.0.4",
-    "jest-environment-jsdom": "^30.0.4",
+    "jest-environment-jsdom": "^30.0.5",
     "jest-mock-extended": "^4.0.0",
     "postcss": "^8",
     "prettier": "^3.6.2",

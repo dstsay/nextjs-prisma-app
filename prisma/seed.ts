@@ -34,10 +34,10 @@ async function main() {
       hourlyRate: 150,
       profileImage: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400',
       portfolioImages: [
-        'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800',
-        'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=800',
-        'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=800',
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800'
+        'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=800', // Soft bridal makeup
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800', // Natural beauty look
+        'https://images.unsplash.com/photo-1521146764736-56c929d59c83?w=800', // Elegant makeup
+        'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=800'  // Bridal beauty
       ],
       location: 'New York, NY',
       badges: ['Certified Pro', 'Best of Beauty 2024'],
@@ -65,10 +65,10 @@ async function main() {
       hourlyRate: 250,
       profileImage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400',
       portfolioImages: [
-        'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800',
-        'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800',
-        'https://images.unsplash.com/photo-1512361436605-a484bdb34b5f?w=800',
-        'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800'
+        'https://images.unsplash.com/photo-1506863530036-1efeddceb993?w=800', // Bold glamour makeup
+        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800', // Red carpet glam
+        'https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=800', // Dramatic makeup
+        'https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?w=800'  // Evening glamour
       ],
       location: 'Los Angeles, CA',
       badges: ['Celebrity Artist', 'Sponsored'],
@@ -96,10 +96,10 @@ async function main() {
       hourlyRate: 120,
       profileImage: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400',
       portfolioImages: [
-        'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800',
-        'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=800',
-        'https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=800',
-        'https://images.unsplash.com/photo-1620065416784-2e16cd14cf0f?w=800'
+        'https://images.unsplash.com/photo-1520872024865-3ff2805d8bb3?w=800', // K-beauty glow
+        'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=800', // Natural Asian beauty
+        'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800', // Dewy skin look
+        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800'  // Glass skin effect
       ],
       location: 'San Francisco, CA',
       badges: ['Rising Star', 'Skincare Expert'],
@@ -128,10 +128,10 @@ async function main() {
       hourlyRate: 200,
       profileImage: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400',
       portfolioImages: [
-        'https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?w=800',
-        'https://images.unsplash.com/photo-1562572159-4efc207f5aff?w=800',
-        'https://images.unsplash.com/photo-1583147610149-781ac108dfc6?w=800',
-        'https://images.unsplash.com/photo-1597586124394-fbd6ef244026?w=800'
+        'https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?w=800', // Editorial fashion
+        'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=800', // Creative makeup art
+        'https://images.unsplash.com/photo-1523264653568-d3d4032d1476?w=800', // Avant-garde look
+        'https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=800'  // High fashion beauty
       ],
       location: 'New York, NY',
       badges: ['Fashion Week Regular', 'Editorial Expert', 'Sponsored'],
@@ -159,10 +159,10 @@ async function main() {
       hourlyRate: 90,
       profileImage: 'https://images.unsplash.com/photo-1530785602389-07594beb8b73?w=400',
       portfolioImages: [
-        'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800',
-        'https://images.unsplash.com/photo-1481214110143-ed630356e1bb?w=800',
-        'https://images.unsplash.com/photo-1512310604669-443f26c35f52?w=800',
-        'https://images.unsplash.com/photo-1576828831022-ca41d3905fb7?w=800'
+        'https://images.unsplash.com/photo-1506863530036-1efeddceb993?w=800', // Natural everyday
+        'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800', // Simple beauty
+        'https://images.unsplash.com/photo-1521146764736-56c929d59c83?w=800', // Fresh faced look
+        'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=800'  // Teen-friendly makeup
       ],
       location: 'Chicago, IL',
       badges: ['Budget Friendly', 'Teen Specialist'],

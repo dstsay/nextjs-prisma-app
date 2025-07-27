@@ -3,6 +3,26 @@ import { AppointmentStatus, AppointmentType } from '@prisma/client';
 import { createTestClient, createTestArtist } from '../../fixtures/testData';
 
 describe('Appointment Model', () => {
+  beforeEach(async () => {
+    // Clean up the database before each test - order matters due to foreign keys
+    await prisma.consultation.deleteMany({});
+    await prisma.appointment.deleteMany({});
+    await prisma.review.deleteMany({});
+    await prisma.availability.deleteMany({});
+    await prisma.makeupArtist.deleteMany({});
+    await prisma.client.deleteMany({});
+  });
+
+  afterAll(async () => {
+    // Clean up after all tests and disconnect
+    await prisma.consultation.deleteMany({});
+    await prisma.appointment.deleteMany({});
+    await prisma.review.deleteMany({});
+    await prisma.availability.deleteMany({});
+    await prisma.makeupArtist.deleteMany({});
+    await prisma.client.deleteMany({});
+    await prisma.$disconnect();
+  });
   describe('Creation', () => {
     it('should create appointment with default values', async () => {
       const client = await createTestClient();

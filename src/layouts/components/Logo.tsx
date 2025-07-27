@@ -1,5 +1,5 @@
 import config from "@/config/config.json";
-import ImageFallback from "@/layouts/helpers/ImageFallback";
+import CloudinaryImage from "../../../components/CloudinaryImage";
 import Link from "next/link";
 
 const Logo = ({ src }: { src?: string }) => {
@@ -13,7 +13,9 @@ const Logo = ({ src }: { src?: string }) => {
   
   const title = config.site.title;
 
-  const logoPath = src ? src : logo;
+  // Use Cloudinary public ID for logo
+  const logoPublicId = "goldiegrace/static/logo";
+  const fallbackPublicId = "goldiegrace/static/placeholder";
 
   // Convert width and height to numbers
   const width =
@@ -27,19 +29,21 @@ const Logo = ({ src }: { src?: string }) => {
 
   return (
     <Link href="/" className="navbar-brand inline-block">
-      {logoPath ? (
-        <ImageFallback
-          width={width * 2}
-          height={height * 2}
-          src={logoPath}
-          fallback="/images/image-placeholder.png"
-          alt={title}
-          priority
-          style={{
-            height: `${height}px`,
-            width: `${width}px`,
-          }}
-        />
+      {logo ? (
+        <div style={{ width: `${width}px`, height: `${height}px`, position: 'relative' }}>
+          <CloudinaryImage
+            publicId={logoPublicId}
+            alt={title}
+            width={width}
+            height={height}
+            fallbackSrc={fallbackPublicId}
+            priority
+            transformation={{
+              quality: 'auto:best',
+              format: 'auto',
+            }}
+          />
+        </div>
       ) : logo_text ? (
         logo_text
       ) : (

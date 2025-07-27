@@ -1,4 +1,5 @@
 import HeroBanner from "@/layouts/partials/HeroBanner";
+import CloudinaryImage from "../components/CloudinaryImage";
 
 export default function Home() {
   const bannerData = {
@@ -19,11 +20,12 @@ export default function Home() {
     title: "Professional Makeup Guidance - On Call, On Point",
     subtitle: "ABOUT us",
     description: "Goldie Grace is your on-demand beauty concierge, connecting you with hand-picked professional makeup artists for live, one-on-one video consultations. Whether you're getting ready for a big presentation, a special occasion, or just want to feel your most confident self every day, our experts guide you step-by-step—right from your own vanity and using the products you already own.",
+    // Cloudinary public IDs for gallery images
     images: [
-      "/images/gallery/1.png",
-      "/images/gallery/2.png",
-      "/images/gallery/3.png",
-      "/images/gallery/4.png"
+      "goldiegrace/static/gallery/1",
+      "goldiegrace/static/gallery/2",
+      "goldiegrace/static/gallery/3",
+      "goldiegrace/static/gallery/4"
     ]
   };
 
@@ -76,13 +78,20 @@ export default function Home() {
             </div>
           </div>
           <div className="row g-4">
-            {galleryData.images.slice(0, 4).map((image, index) => (
+            {galleryData.images.slice(0, 4).map((publicId, index) => (
               <div key={index} className="col-lg-3 col-md-6">
-                <div className="overflow-hidden rounded-lg">
-                  <img 
-                    src={image} 
+                <div className="overflow-hidden rounded-lg relative h-64">
+                  <CloudinaryImage
+                    publicId={publicId}
                     alt={`Gallery ${index + 1}`}
-                    className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                    transformation={{
+                      quality: 'auto',
+                      format: 'auto',
+                      crop: 'fill',
+                    }}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   />
                 </div>
               </div>

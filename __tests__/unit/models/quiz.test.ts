@@ -3,6 +3,26 @@ import { QuestionType } from '@prisma/client';
 import { createTestClient, createTestQuiz } from '../../fixtures/testData';
 
 describe('Quiz System', () => {
+  beforeEach(async () => {
+    // Clean up the database before each test
+    await prisma.answer.deleteMany({});
+    await prisma.quizResponse.deleteMany({});
+    await prisma.answerOption.deleteMany({});
+    await prisma.question.deleteMany({});
+    await prisma.quiz.deleteMany({});
+    await prisma.client.deleteMany({});
+  });
+
+  afterAll(async () => {
+    // Clean up after all tests and disconnect
+    await prisma.answer.deleteMany({});
+    await prisma.quizResponse.deleteMany({});
+    await prisma.answerOption.deleteMany({});
+    await prisma.question.deleteMany({});
+    await prisma.quiz.deleteMany({});
+    await prisma.client.deleteMany({});
+    await prisma.$disconnect();
+  });
   describe('Quiz Creation', () => {
     it('should create quiz with questions and answer options', async () => {
       const quiz = await prisma.quiz.create({
@@ -21,14 +41,14 @@ describe('Quiz System', () => {
                     {
                       optionText: 'Dry',
                       optionValue: 'dry',
-                      optionImage: '/images/dry-skin.jpg',
+                      optionImage: 'goldiegrace/quiz/dry-skin',
                       imageAlt: 'Dry skin example',
                       order: 1,
                     },
                     {
                       optionText: 'Oily',
                       optionValue: 'oily',
-                      optionImage: '/images/oily-skin.jpg',
+                      optionImage: 'goldiegrace/quiz/oily-skin',
                       imageAlt: 'Oily skin example',
                       order: 2,
                     },
@@ -49,7 +69,7 @@ describe('Quiz System', () => {
 
       expect(quiz.questions).toHaveLength(1);
       expect(quiz.questions[0].answerOptions).toHaveLength(2);
-      expect(quiz.questions[0].answerOptions[0].optionImage).toBe('/images/dry-skin.jpg');
+      expect(quiz.questions[0].answerOptions[0].optionImage).toBe('goldiegrace/quiz/dry-skin');
       expect(quiz.questions[0].answerOptions[0].imageAlt).toBe('Dry skin example');
     });
 
