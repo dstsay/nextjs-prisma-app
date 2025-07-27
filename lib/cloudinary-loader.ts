@@ -25,6 +25,12 @@ export default function cloudinaryLoader({
     return src;
   }
 
+  // Check if src already contains version (e.g., v1234567890/goldiegrace/...)
+  const hasVersion = /^v\d+\//.test(src);
+  
+  // If using auto-upload mapping with version, Cloudinary will handle it
+  // The version is part of the public ID path
+
   // Build transformation parameters
   const params: string[] = [];
   
@@ -48,6 +54,8 @@ export default function cloudinaryLoader({
   const transformation = params.join(',');
   
   // Build the URL
+  // Note: If src contains version (v123/path), it's included as part of the path
+  // This supports Cloudinary's auto-upload mapping with versioning
   return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transformation}/${src}`;
 }
 

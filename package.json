@@ -26,7 +26,8 @@
     "test:cloudinary": "jest cloudinary",
     "migrate:cloudinary": "tsx scripts/migrate-to-cloudinary.ts",
     "migrate:cloudinary:production": "tsx scripts/migrate-to-cloudinary-production.ts",
-    "migrate:cloudinary:verify": "tsx scripts/verify-cloudinary-migration.ts"
+    "migrate:cloudinary:verify": "tsx scripts/verify-cloudinary-migration.ts",
+    "migrate:versioned": "tsx scripts/migrate-to-versioned-urls.ts"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
