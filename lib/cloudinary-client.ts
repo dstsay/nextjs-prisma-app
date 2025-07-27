@@ -15,11 +15,13 @@ export interface CloudinaryTransformation {
 }
 
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+const DEPLOYMENT_ID = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.NEXT_PUBLIC_BUILD_ID || 'dev';
 
 // Generate Cloudinary URL on client side
 export function getCloudinaryUrl(
   publicId: string,
-  transformations: CloudinaryTransformation[] = []
+  transformations: CloudinaryTransformation[] = [],
+  version?: string | number
 ): string {
   if (!CLOUD_NAME) {
     console.error('NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME is not set');
@@ -49,9 +51,18 @@ export function getCloudinaryUrl(
     .join('/');
 
   const baseUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload`;
-  const url = transformStr 
+  let url = transformStr 
     ? `${baseUrl}/${transformStr}/${publicId}`
     : `${baseUrl}/${publicId}`;
+
+  // Add version parameter if provided
+  if (version) {
+    url += `?v=${version}`;
+  } else if (DEPLOYMENT_ID !== 'dev') {
+    // In production, use deployment ID as cache buster
+    // This ensures new deployments get fresh images
+    url += `?d=${DEPLOYMENT_ID.substring(0, 8)}`;
+  }
 
   return url;
 }
@@ -59,7 +70,8 @@ export function getCloudinaryUrl(
 // Generate optimized URL for an image
 export function getOptimizedUrl(
   publicId: string,
-  transformation?: CloudinaryTransformation
+  transformation?: CloudinaryTransformation,
+  version?: string | number
 ): string {
   const defaultTransform: CloudinaryTransformation = {
     quality: 'auto',
@@ -71,43 +83,39 @@ export function getOptimizedUrl(
     flags: ['progressive'],
   };
   
-  const url = getCloudinaryUrl(publicId, [transformation || defaultTransform]);
-  // Add cache-busting parameter to force fresh load
-  // This can be removed once images are stable
-  return url + '?t=' + new Date().getTime();
+  return getCloudinaryUrl(publicId, [transformation || defaultTransform], version);
 }
 
 // Generate responsive image URLs
 export function getResponsiveUrls(
   publicId: string,
-  baseTransformation: CloudinaryTransformation = {}
+  baseTransformation: CloudinaryTransformation = {},
+  version?: string | number
 ): {
   srcSet: string;
   sizes: string;
   src: string;
 } {
   const widths = [320, 640, 768, 1024, 1280, 1536];
-  const timestamp = new Date().getTime();
   const srcSet = widths
     .map((width) => {
-      const url = getCloudinaryUrl(publicId, [{ ...baseTransformation, width, crop: 'limit' }]);
-      return `${url}?t=${timestamp} ${width}w`;
+      const url = getCloudinaryUrl(publicId, [{ ...baseTransformation, width, crop: 'limit' }], version);
+      return `${url} ${width}w`;
     })
     .join(', ');
 
   const sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
-  const src = getCloudinaryUrl(publicId, [{ ...baseTransformation, width: 1024 }]) + '?t=' + timestamp;
+  const src = getCloudinaryUrl(publicId, [{ ...baseTransformation, width: 1024 }], version);
 
   return { srcSet, sizes, src };
 }
 
 // Generate blur placeholder URL
 export function getPlaceholderUrl(publicId: string): string {
-  const url = getCloudinaryUrl(publicId, [{
+  return getCloudinaryUrl(publicId, [{
     width: 30,
     quality: 10,
     effect: 'blur:1000',
     format: 'auto',
   }]);
-  return url + '?t=' + new Date().getTime();
 }

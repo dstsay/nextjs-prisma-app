@@ -57,23 +57,12 @@ export default function CloudinaryImage({
     defaultSizes = sizes || '100vw';
     placeholderUrl = publicId; // Use same URL as placeholder
   } else {
-    // Use Cloudinary transformation
-    const responsive = getResponsiveUrls(publicId, transformation);
+    // Use Cloudinary transformation with version support
+    const responsive = getResponsiveUrls(publicId, transformation, version);
     src = responsive.src;
     srcSet = responsive.srcSet;
     defaultSizes = responsive.sizes;
     placeholderUrl = getPlaceholderUrl(publicId);
-    
-    // Add version parameter if provided (for cache busting)
-    if (version) {
-      const versionParam = `?v=${version}`;
-      src += versionParam;
-      srcSet = srcSet.split(', ').map(s => {
-        const [url, size] = s.split(' ');
-        return `${url}${versionParam} ${size}`;
-      }).join(', ');
-      placeholderUrl += versionParam;
-    }
   }
 
   const handleLoad = () => {
@@ -180,8 +169,9 @@ export function CloudinaryImageStatic({
   transformation,
   className,
   priority = false,
+  version,
 }: Omit<CloudinaryImageProps, 'fill' | 'sizes' | 'onLoad' | 'onError' | 'fallbackSrc'>) {
-  const src = getOptimizedUrl(publicId, transformation);
+  const src = getOptimizedUrl(publicId, transformation, version);
   const placeholderUrl = getPlaceholderUrl(publicId);
 
   return (

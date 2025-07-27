@@ -39,7 +39,9 @@ model MakeupArtist {
   specialties       String[]
   yearsExperience   Int?
   profileImage      String?
+  profileImageVersion Int           @default(1)
   portfolioImages   String[]        // Array of portfolio image URLs
+  portfolioImageVersions Int[]      @default([])  // Array of versions corresponding to each portfolio image
   location          String?         // e.g., "New York, NY"
   badges            String[]        // e.g., ["Best of Beauty", "Certified Pro"]
   hourlyRate        Float?
