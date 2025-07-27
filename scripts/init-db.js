@@ -7,6 +7,12 @@ async function initDatabase() {
     // Try to run migrations
     execSync('npx prisma migrate deploy', { stdio: 'inherit' });
     console.log('✅ Migrations applied successfully');
+    
+    // Always run db push to ensure schema is fully synced
+    // This handles any schema changes that don't have migrations yet
+    console.log('🔄 Ensuring schema is fully synced...');
+    execSync('npx prisma db push --skip-generate --accept-data-loss', { stdio: 'inherit' });
+    console.log('✅ Database schema is fully synced');
   } catch (error) {
     console.log('⚠️  Database already has schema, attempting to resolve...');
     
