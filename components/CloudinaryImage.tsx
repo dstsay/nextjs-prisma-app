@@ -78,9 +78,13 @@ export default function CloudinaryImage({
 
   // If there's an error, use fallback
   if (hasError && fallbackSrc) {
+    // Check if fallbackSrc is a public ID or a full URL
+    const fallbackIsFullUrl = fallbackSrc.startsWith('http://') || fallbackSrc.startsWith('https://');
+    const fallbackUrl = fallbackIsFullUrl ? fallbackSrc : getOptimizedUrl(fallbackSrc, transformation, version);
+    
     return (
       <Image
-        src={fallbackSrc}
+        src={fallbackUrl}
         alt={alt}
         width={width}
         height={height}
