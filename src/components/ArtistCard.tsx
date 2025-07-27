@@ -75,7 +75,7 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
             </div>
           )}
           
-          <button className="w-full mt-4 bg-gray-900 text-white py-3 rounded-md hover:bg-gray-800 transition-colors">
+          <button className="w-full mt-4 bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-colors">
             Book Session
           </button>
         </div>
@@ -148,7 +148,7 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
           </div>
           
           <div className="flex flex-col items-end">
-            <button className="bg-gray-900 text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors">
+            <button className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors">
               Book Session
             </button>
             {artist.badges.includes("Sponsored") && (
