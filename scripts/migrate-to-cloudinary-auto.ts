@@ -226,8 +226,7 @@ async function migrateToCloudinaryAuto() {
             console.log(`  📸 Uploading portfolio image ${i + 1}/${portfolioUrls.length}...`);
             const result = await uploadImageFromUrl(imageUrl, {
               folder: `goldiegrace/portfolio/${artist.username}`,
-              public_id: publicId,
-              overwrite: true
+              public_id: publicId
             });
             
             newPortfolioImages.push(result.public_id);
@@ -246,8 +245,7 @@ async function migrateToCloudinaryAuto() {
             const publicId = generatePublicId(`profile_${artist.username}`);
             const result = await uploadImageFromUrl(artist.profileImage, {
               folder: `goldiegrace/profile-images/artists`,
-              public_id: publicId,
-              overwrite: true
+              public_id: publicId
             });
             
             newProfileImage = result.public_id;
