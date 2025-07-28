@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { UserType } from "@/lib/auth-helpers"
@@ -9,7 +9,7 @@ interface LoginFormProps {
   userType: UserType
 }
 
-export function LoginForm({ userType }: LoginFormProps) {
+function LoginFormInner({ userType }: LoginFormProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || `/${userType}/dashboard`
@@ -106,5 +106,20 @@ export function LoginForm({ userType }: LoginFormProps) {
         )}
       </button>
     </form>
+  )
+}
+
+// Export wrapper component with Suspense boundary
+export function LoginForm(props: LoginFormProps) {
+  return (
+    <Suspense fallback={
+      <div className="space-y-4">
+        <div className="h-10 bg-gray-200 rounded animate-pulse" />
+        <div className="h-10 bg-gray-200 rounded animate-pulse" />
+        <div className="h-12 bg-gray-200 rounded animate-pulse" />
+      </div>
+    }>
+      <LoginFormInner {...props} />
+    </Suspense>
   )
 }
