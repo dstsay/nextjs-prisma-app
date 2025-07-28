@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { UserType } from "@/lib/auth-helpers"
 
 interface LoginFormProps {
@@ -11,6 +11,9 @@ interface LoginFormProps {
 
 export function LoginForm({ userType }: LoginFormProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || `/${userType}/dashboard`
+  
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -36,7 +39,11 @@ export function LoginForm({ userType }: LoginFormProps) {
       if (result?.error) {
         setError("Invalid username or password")
       } else if (result?.ok) {
-        router.push(`/${userType}/dashboard`)
+        // Add a small delay to ensure session is established
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        // Use callbackUrl or default to dashboard
+        router.push(callbackUrl)
         router.refresh()
       }
     } catch (error) {
