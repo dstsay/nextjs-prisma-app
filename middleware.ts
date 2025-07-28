@@ -1,24 +1,30 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { getToken } from "next-auth/jwt"
+import { auth } from "@/lib/auth"
 
-// Routes that require authentication
-const protectedRoutes = {
-  client: ["/client/dashboard"],
-  artist: ["/artist/dashboard"],
-}
-
-// Routes that should redirect authenticated users
-const authRoutes = [
-  "/auth/client/login",
-  "/auth/artist/login",
-  "/auth/signin",
-]
-
-export default async function middleware(request: NextRequest) {
+// Wrap the middleware with auth
+export default auth((request) => {
   const pathname = request.nextUrl.pathname
+  const session = request.auth
   
   console.log(`[Middleware ${new Date().toISOString()}] Running for path: ${pathname}`)
+  console.log(`[Middleware] Session found: ${!!session}`)
+  if (session?.user) {
+    console.log(`[Middleware] Session userType: ${session.user.userType}, id: ${session.user.id}`)
+  }
+  
+  // Routes that require authentication
+  const protectedRoutes = {
+    client: ["/client/dashboard"],
+    artist: ["/artist/dashboard"],
+  }
+
+  // Routes that should redirect authenticated users
+  const authRoutes = [
+    "/auth/client/login",
+    "/auth/artist/login",
+    "/auth/signin",
+  ]
   
   // Check if the route is an auth route
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route))
@@ -30,20 +36,9 @@ export default async function middleware(request: NextRequest) {
   
   console.log(`[Middleware] Route type - Auth: ${isAuthRoute}, Protected: ${isProtectedRoute}, Client: ${isClientRoute}, Artist: ${isArtistRoute}`)
   
-  // Get the token using getToken which works in Edge Runtime
-  const token = await getToken({ 
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET
-  })
-  
-  console.log(`[Middleware ${new Date().toISOString()}] Token found: ${!!token}`)
-  if (token) {
-    console.log(`[Middleware] Token userType: ${token.userType}, id: ${token.id}`)
-  }
-  
   // Redirect authenticated users away from auth pages
-  if (isAuthRoute && token) {
-    const dashboardUrl = token.userType === "artist" 
+  if (isAuthRoute && session) {
+    const dashboardUrl = session.user.userType === "artist" 
       ? "/artist/dashboard" 
       : "/client/dashboard"
     console.log(`[Middleware] Redirecting authenticated user from auth page to: ${dashboardUrl}`)
@@ -51,7 +46,7 @@ export default async function middleware(request: NextRequest) {
   }
   
   // Protect routes that require authentication
-  if (isProtectedRoute && !token) {
+  if (isProtectedRoute && !session) {
     const loginUrl = isArtistRoute 
       ? "/auth/artist/login" 
       : "/auth/client/login"
@@ -62,20 +57,20 @@ export default async function middleware(request: NextRequest) {
   }
   
   // Check role-based access
-  if (token) {
-    if (isClientRoute && token.userType !== "client") {
-      console.log(`[Middleware] Unauthorized: Client route accessed by ${token.userType}`)
+  if (session?.user) {
+    if (isClientRoute && session.user.userType !== "client") {
+      console.log(`[Middleware] Unauthorized: Client route accessed by ${session.user.userType}`)
       return NextResponse.redirect(new URL("/auth/unauthorized", request.url))
     }
-    if (isArtistRoute && token.userType !== "artist") {
-      console.log(`[Middleware] Unauthorized: Artist route accessed by ${token.userType}`)
+    if (isArtistRoute && session.user.userType !== "artist") {
+      console.log(`[Middleware] Unauthorized: Artist route accessed by ${session.user.userType}`)
       return NextResponse.redirect(new URL("/auth/unauthorized", request.url))
     }
   }
   
   console.log(`[Middleware] Allowing request to proceed`)
   return NextResponse.next()
-}
+})
 
 export const config = {
   matcher: [
