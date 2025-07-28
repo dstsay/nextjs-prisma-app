@@ -89,7 +89,7 @@ const readline = require('readline').createInterface({
   output: process.stdout
 })
 
-readline.question('Are you sure you want to run this migration on the PRODUCTION database? (yes/no): ', (answer) => {
+readline.question('Are you sure you want to run this migration on the PRODUCTION database? (yes/no): ', (answer: string) => {
   if (answer.toLowerCase() === 'yes') {
     migrateNames()
       .then(() => {
