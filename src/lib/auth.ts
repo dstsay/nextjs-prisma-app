@@ -183,7 +183,9 @@ const customPrismaAdapter = {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: customPrismaAdapter as any,
+  // Temporarily disable custom adapter to use JWT-only authentication
+  // The custom adapter was causing issues with session establishment
+  // adapter: customPrismaAdapter as any,
   ...authConfig,
 })
 
