@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { auth } from "@/lib/auth"
+import { getToken } from "next-auth/jwt"
 
 // Routes that require authentication
 const protectedRoutes = {
@@ -26,19 +26,22 @@ export default async function middleware(request: NextRequest) {
   const isArtistRoute = protectedRoutes.artist.some(route => pathname.startsWith(route))
   const isProtectedRoute = isClientRoute || isArtistRoute
   
-  // Get the session
-  const session = await auth()
+  // Get the token using getToken which works in Edge Runtime
+  const token = await getToken({ 
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET
+  })
   
   // Redirect authenticated users away from auth pages
-  if (isAuthRoute && session) {
-    const dashboardUrl = session.user.userType === "artist" 
+  if (isAuthRoute && token) {
+    const dashboardUrl = token.userType === "artist" 
       ? "/artist/dashboard" 
       : "/client/dashboard"
     return NextResponse.redirect(new URL(dashboardUrl, request.url))
   }
   
   // Protect routes that require authentication
-  if (isProtectedRoute && !session) {
+  if (isProtectedRoute && !token) {
     const loginUrl = isArtistRoute 
       ? "/auth/artist/login" 
       : "/auth/client/login"
@@ -48,11 +51,11 @@ export default async function middleware(request: NextRequest) {
   }
   
   // Check role-based access
-  if (session) {
-    if (isClientRoute && session.user.userType !== "client") {
+  if (token) {
+    if (isClientRoute && token.userType !== "client") {
       return NextResponse.redirect(new URL("/auth/unauthorized", request.url))
     }
-    if (isArtistRoute && session.user.userType !== "artist") {
+    if (isArtistRoute && token.userType !== "artist") {
       return NextResponse.redirect(new URL("/auth/unauthorized", request.url))
     }
   }
