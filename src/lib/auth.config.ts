@@ -108,10 +108,12 @@ export const authConfig = {
       },
     }),
   ],
-  pages: {
-    signIn: "/auth/signin",
-    error: "/auth/error",
-  },
+  // Removed pages configuration to use NextAuth defaults
+  // This fixes the issue where custom login pages weren't working properly
+  // pages: {
+  //   signIn: "/auth/signin",
+  //   error: "/auth/error",
+  // },
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
