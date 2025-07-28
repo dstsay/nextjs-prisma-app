@@ -1,13 +1,17 @@
 import type { NextAuthConfig } from "next-auth"
-import Google from "next-auth/providers/google"
-import Facebook from "next-auth/providers/facebook"
-import Apple from "next-auth/providers/apple"
+// OAuth providers - uncomment when credentials are configured
+// import Google from "next-auth/providers/google"
+// import Facebook from "next-auth/providers/facebook"
+// import Apple from "next-auth/providers/apple"
 import Credentials from "next-auth/providers/credentials"
 import { compare } from "bcryptjs"
 import { prisma } from "@/lib/prisma"
 
 export const authConfig = {
   providers: [
+    // OAuth providers commented out until credentials are configured
+    // Uncomment these when you have the OAuth credentials in Vercel
+    /*
     Google({
       clientId: process.env.AUTH_GOOGLE_ID!,
       clientSecret: process.env.AUTH_GOOGLE_SECRET!,
@@ -26,6 +30,7 @@ export const authConfig = {
         },
       },
     }),
+    */
     Credentials({
       id: "client-credentials",
       name: "Client Login",
@@ -127,5 +132,5 @@ export const authConfig = {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
 } satisfies NextAuthConfig
