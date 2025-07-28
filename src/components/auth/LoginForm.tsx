@@ -26,6 +26,10 @@ function LoginFormInner({ userType }: LoginFormProps) {
     setError(null)
     setIsLoading(true)
 
+    console.log(`[LoginForm ${new Date().toISOString()}] Starting login for ${userType}`)
+    console.log(`[LoginForm] Username: ${formData.username}`)
+    console.log(`[LoginForm] CallbackUrl: ${callbackUrl}`)
+
     try {
       const result = await signIn(
         userType === "artist" ? "artist-credentials" : "client-credentials",
@@ -36,17 +40,27 @@ function LoginFormInner({ userType }: LoginFormProps) {
         }
       )
 
+      console.log(`[LoginForm ${new Date().toISOString()}] SignIn result:`, result)
+
       if (result?.error) {
+        console.log(`[LoginForm] Login failed with error: ${result.error}`)
         setError("Invalid username or password")
       } else if (result?.ok) {
+        console.log(`[LoginForm ${new Date().toISOString()}] Login successful, waiting 100ms...`)
+        
         // Add a small delay to ensure session is established
         await new Promise(resolve => setTimeout(resolve, 100))
+        
+        console.log(`[LoginForm ${new Date().toISOString()}] Attempting redirect to: ${callbackUrl}`)
         
         // Use callbackUrl or default to dashboard
         router.push(callbackUrl)
         router.refresh()
+        
+        console.log(`[LoginForm ${new Date().toISOString()}] Redirect initiated`)
       }
     } catch (error) {
+      console.error(`[LoginForm ${new Date().toISOString()}] Unexpected error:`, error)
       setError("An error occurred. Please try again.")
     } finally {
       setIsLoading(false)
