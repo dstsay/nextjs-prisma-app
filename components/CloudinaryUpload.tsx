@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, DragEvent } from 'react';
-import { isValidImageType, isValidFileSize } from '../lib/cloudinary';
+import { isValidImageType, isValidFileSize } from '@/lib/cloudinary-utils';
 
 interface CloudinaryUploadProps {
   onUpload: (url: string, publicId: string) => void;
@@ -12,6 +12,7 @@ interface CloudinaryUploadProps {
   multiple?: boolean;
   className?: string;
   uploadPreset?: string;
+  usePreset?: boolean; // Add flag to control preset usage
 }
 
 export default function CloudinaryUpload({
@@ -23,6 +24,7 @@ export default function CloudinaryUpload({
   multiple = false,
   className = '',
   uploadPreset,
+  usePreset = true,
 }: CloudinaryUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -63,7 +65,11 @@ export default function CloudinaryUpload({
 
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', preset || 'ml_default');
+    
+    // Only use preset if usePreset is true
+    if (usePreset) {
+      formData.append('upload_preset', preset || 'ml_default');
+    }
     
     if (folder) {
       formData.append('folder', folder);

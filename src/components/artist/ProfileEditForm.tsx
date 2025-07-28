@@ -1,0 +1,310 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+
+interface ArtistProfile {
+  id: string
+  username: string
+  email: string
+  name: string
+  firstName: string | null
+  lastName: string | null
+  bio: string | null
+  specialties: string[]
+  yearsExperience: number | null
+  location: string | null
+  badges: string[]
+  hourlyRate: number | null
+  isAvailable: boolean
+}
+
+interface ProfileEditFormProps {
+  initialData: ArtistProfile
+}
+
+export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: initialData.firstName || "",
+    lastName: initialData.lastName || "",
+    bio: initialData.bio || "",
+    specialties: initialData.specialties.join(", "),
+    yearsExperience: initialData.yearsExperience?.toString() || "",
+    location: initialData.location || "",
+    badges: initialData.badges.join(", "),
+    hourlyRate: initialData.hourlyRate?.toString() || "",
+    isAvailable: initialData.isAvailable,
+  })
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    setSuccess(false)
+    setIsLoading(true)
+
+    try {
+      // Convert comma-separated strings to arrays
+      const specialtiesArray = formData.specialties
+        .split(",")
+        .map(s => s.trim())
+        .filter(s => s.length > 0)
+      
+      const badgesArray = formData.badges
+        .split(",")
+        .map(b => b.trim())
+        .filter(b => b.length > 0)
+
+      const payload = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        bio: formData.bio || null,
+        specialties: specialtiesArray,
+        yearsExperience: formData.yearsExperience ? parseInt(formData.yearsExperience) : null,
+        location: formData.location || null,
+        badges: badgesArray,
+        hourlyRate: formData.hourlyRate ? parseFloat(formData.hourlyRate) : null,
+        isAvailable: formData.isAvailable,
+      }
+
+      const response = await fetch("/api/artist/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update profile")
+      }
+
+      setSuccess(true)
+      router.refresh()
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(false), 3000)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value
+    }))
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
+          {error}
+        </div>
+      )}
+      
+      {success && (
+        <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-md">
+          Profile updated successfully!
+        </div>
+      )}
+
+      {/* Read-only fields */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Username (cannot be changed)
+          </label>
+          <input
+            type="text"
+            value={initialData.username}
+            disabled
+            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500"
+          />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Email (cannot be changed)
+          </label>
+          <input
+            type="email"
+            value={initialData.email}
+            disabled
+            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500"
+          />
+        </div>
+      </div>
+
+      {/* Editable fields */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+            First Name *
+          </label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleInputChange}
+            required
+            maxLength={50}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+            Last Name *
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleInputChange}
+            required
+            maxLength={50}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-1">
+          Bio
+        </label>
+        <textarea
+          id="bio"
+          name="bio"
+          value={formData.bio}
+          onChange={handleInputChange}
+          rows={4}
+          maxLength={1000}
+          placeholder="Tell clients about yourself..."
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+        />
+        <p className="text-xs text-gray-500 mt-1">{formData.bio.length}/1000 characters</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="yearsExperience" className="block text-sm font-medium text-gray-700 mb-1">
+            Years of Experience
+          </label>
+          <input
+            type="number"
+            id="yearsExperience"
+            name="yearsExperience"
+            value={formData.yearsExperience}
+            onChange={handleInputChange}
+            min="0"
+            max="50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="hourlyRate" className="block text-sm font-medium text-gray-700 mb-1">
+            Hourly Rate ($)
+          </label>
+          <input
+            type="number"
+            id="hourlyRate"
+            name="hourlyRate"
+            value={formData.hourlyRate}
+            onChange={handleInputChange}
+            min="0"
+            max="10000"
+            step="0.01"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+          Location
+        </label>
+        <input
+          type="text"
+          id="location"
+          name="location"
+          value={formData.location}
+          onChange={handleInputChange}
+          maxLength={100}
+          placeholder="e.g., New York, NY"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="specialties" className="block text-sm font-medium text-gray-700 mb-1">
+          Specialties (comma-separated)
+        </label>
+        <input
+          type="text"
+          id="specialties"
+          name="specialties"
+          value={formData.specialties}
+          onChange={handleInputChange}
+          placeholder="e.g., Bridal, Editorial, Natural Glam"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+        />
+        <p className="text-xs text-gray-500 mt-1">Enter your specialties separated by commas</p>
+      </div>
+
+      <div>
+        <label htmlFor="badges" className="block text-sm font-medium text-gray-700 mb-1">
+          Badges & Certifications (comma-separated)
+        </label>
+        <input
+          type="text"
+          id="badges"
+          name="badges"
+          value={formData.badges}
+          onChange={handleInputChange}
+          placeholder="e.g., Certified Pro, Best of Beauty 2024"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+        />
+        <p className="text-xs text-gray-500 mt-1">Enter your badges separated by commas</p>
+      </div>
+
+      <div className="flex items-center">
+        <input
+          type="checkbox"
+          id="isAvailable"
+          name="isAvailable"
+          checked={formData.isAvailable}
+          onChange={handleInputChange}
+          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+        />
+        <label htmlFor="isAvailable" className="ml-2 block text-sm text-gray-900">
+          I am available for bookings
+        </label>
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? "Saving..." : "Save Profile"}
+        </button>
+      </div>
+    </form>
+  )
+}

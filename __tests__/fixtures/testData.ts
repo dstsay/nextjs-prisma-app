@@ -1,7 +1,24 @@
-import { prisma } from '@/lib/db';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { getTestPrismaClient } from '../utils/integration-test-setup';
+
+// Helper to get prisma client - uses test client in test environment
+function getPrisma(): PrismaClient {
+  if (process.env.NODE_ENV === 'test') {
+    try {
+      return getTestPrismaClient();
+    } catch {
+      // Fallback for tests that don't use the new setup
+      const { prisma } = require('@/lib/prisma');
+      return prisma;
+    }
+  }
+  const { prisma } = require('@/lib/prisma');
+  return prisma;
+}
 
 export async function createTestClient(overrides: any = {}) {
+  const prisma = getPrisma();
   const timestamp = Date.now();
   const random = Math.floor(Math.random() * 10000);
   return prisma.client.create({
@@ -16,6 +33,7 @@ export async function createTestClient(overrides: any = {}) {
 }
 
 export async function createTestArtist(overrides: any = {}) {
+  const prisma = getPrisma();
   const timestamp = Date.now();
   const random = Math.floor(Math.random() * 10000);
   return prisma.makeupArtist.create({
@@ -45,6 +63,7 @@ export async function createTestReview(
   artistId: string,
   overrides: any = {}
 ) {
+  const prisma = getPrisma();
   return prisma.review.create({
     data: {
       clientId,
@@ -58,6 +77,7 @@ export async function createTestReview(
 }
 
 export async function createTestQuiz(overrides: any = {}) {
+  const prisma = getPrisma();
   const timestamp = Date.now();
   return prisma.quiz.create({
     data: {

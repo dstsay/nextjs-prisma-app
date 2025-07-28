@@ -46,6 +46,7 @@ npx prisma studio       # Open Prisma Studio GUI
 - **Prisma**: Type-safe ORM for database operations
 - **Tailwind CSS**: Utility-first CSS framework for responsive design
 - **PostgreSQL**: Default database (configurable in schema.prisma)
+-- **Cloudinary**: Default cloud storage for image and media assets
 
 ### Project Structure
 - `/app`: Next.js App Router pages and layouts

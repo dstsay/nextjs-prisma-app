@@ -15,11 +15,14 @@ datasource db {
 model Client {
   id                String          @id @default(cuid())
   username          String          @unique
-  password          String          // Hashed with bcrypt
+  password          String?         // Hashed with bcrypt (optional for OAuth users)
   email             String          @unique
   name              String?
+  firstName         String?
+  lastName          String?
   phone             String?
   profileImage      String?
+  emailVerified     DateTime?
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   
@@ -27,14 +30,18 @@ model Client {
   consultations     Consultation[]
   reviews           Review[]
   quizResponses     QuizResponse[]
+  accounts          Account[]
+  sessions          Session[]
 }
 
 model MakeupArtist {
   id                String          @id @default(cuid())
   username          String          @unique
-  password          String          // Hashed with bcrypt
+  password          String?         // Hashed with bcrypt (optional for OAuth users)
   email             String          @unique
   name              String
+  firstName         String?
+  lastName          String?
   bio               String?
   specialties       String[]
   yearsExperience   Int?
@@ -46,6 +53,7 @@ model MakeupArtist {
   badges            String[]        // e.g., ["Best of Beauty", "Certified Pro"]
   hourlyRate        Float?
   isAvailable       Boolean         @default(true)
+  emailVerified     DateTime?
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   
@@ -53,6 +61,70 @@ model MakeupArtist {
   consultations     Consultation[]
   reviews           Review[]
   availability      Availability[]
+  artistAccounts    ArtistAccount[]
+  artistSessions    ArtistSession[]
+}
+
+// NextAuth Models for Client
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user Client @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         Client   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// NextAuth Models for MakeupArtist
+model ArtistAccount {
+  id                String  @id @default(cuid())
+  artistId          String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  artist MakeupArtist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([artistId])
+}
+
+model ArtistSession {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  artistId     String
+  expires      DateTime
+  artist       MakeupArtist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId])
 }
 
 // Quiz System Models

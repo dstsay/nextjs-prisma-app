@@ -4,6 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { SessionProvider } from "@/components/auth/SessionProvider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -22,5 +23,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  return <>{children}</>;
+  return (
+    <SessionProvider>
+      {children}
+    </SessionProvider>
+  );
 }

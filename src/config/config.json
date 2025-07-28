@@ -27,8 +27,8 @@
 
   "navigation_button": {
     "enable": true,
-    "label": "Book an appointment",
-    "link": "/contact"
+    "label": "Login",
+    "link": "/auth/client/login"
   },
 
   "footer_button": {

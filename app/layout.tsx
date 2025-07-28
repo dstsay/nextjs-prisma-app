@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import config from "@/config/config.json";
 import theme from "@/config/theme.json";
 import TwSizeIndicator from "@/layouts/helpers/TwSizeIndicator";
-import Footer from "@/layouts/partials/Footer";
-import Header from "@/layouts/partials/Header";
+import ConditionalLayout from "@/layouts/partials/ConditionalLayout";
 import Providers from "@/layouts/partials/Providers";
 import "@/styles/globals.css";
 
@@ -50,9 +49,9 @@ export default function RootLayout({
       <body suppressHydrationWarning={true} className="font-primary">
         <TwSizeIndicator />
         <Providers>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
         </Providers>
       </body>
     </html>

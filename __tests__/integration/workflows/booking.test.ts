@@ -1,8 +1,32 @@
-import { prisma } from '@/lib/db';
 import { AppointmentStatus } from '@prisma/client';
 import { createTestClient, createTestArtist } from '../../fixtures/testData';
+import { setupIntegrationTest, teardownIntegrationTest, getTestPrismaClient } from '../../utils/integration-test-setup';
 
 describe('Booking Workflow Integration', () => {
+  let prisma: any;
+
+  beforeAll(async () => {
+    prisma = await setupIntegrationTest();
+  });
+
+  afterAll(async () => {
+    await teardownIntegrationTest();
+  });
+
+  beforeEach(async () => {
+    // Get fresh prisma client and ensure clean state
+    prisma = getTestPrismaClient();
+    // Delete in correct order to avoid foreign key constraints
+    await prisma.consultation.deleteMany();
+    await prisma.appointment.deleteMany();
+    await prisma.availability.deleteMany();
+    await prisma.review.deleteMany();
+    await prisma.quizResponse.deleteMany();
+    await prisma.quiz.deleteMany();
+    await prisma.client.deleteMany();
+    await prisma.makeupArtist.deleteMany();
+  });
+
   it('should complete full booking workflow from start to finish', async () => {
     // 1. Create artist and client
     const artist = await createTestArtist({
@@ -15,6 +39,11 @@ describe('Booking Workflow Integration', () => {
       name: 'Jane Doe',
       email: 'jane@example.com',
     });
+
+    expect(artist).toBeDefined();
+    expect(artist.id).toBeDefined();
+    expect(client).toBeDefined();
+    expect(client.id).toBeDefined();
 
     // 2. Set up artist availability
     const availability = await prisma.availability.create({

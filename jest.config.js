@@ -12,12 +12,19 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^cloudinary$': '<rootDir>/__mocks__/cloudinary.ts',
+    '^next-auth$': '<rootDir>/__mocks__/next-auth.ts',
+    '^next-auth/react$': '<rootDir>/__mocks__/next-auth-react.ts',
+    '^next-auth/providers/(.*)$': '<rootDir>/__mocks__/next-auth-providers.ts',
+    '^@auth/prisma-adapter$': '<rootDir>/__mocks__/auth-prisma-adapter.ts',
   },
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
       tsconfig: '<rootDir>/tsconfig.test.json'
     }],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(next-auth|@auth)/)',
+  ],
   testMatch: [
     '**/__tests__/**/*.test.ts',
     '**/__tests__/**/*.test.tsx',

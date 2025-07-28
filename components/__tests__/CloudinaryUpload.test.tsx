@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import CloudinaryUpload from '../CloudinaryUpload';
-import { isValidImageType, isValidFileSize } from '../../lib/cloudinary';
+import { isValidImageType, isValidFileSize } from '@/lib/cloudinary-utils';
 
 // Mock cloudinary validation functions
-jest.mock('../../lib/cloudinary', () => ({
+jest.mock('@/lib/cloudinary-utils', () => ({
   isValidImageType: jest.fn(),
   isValidFileSize: jest.fn(),
 }));

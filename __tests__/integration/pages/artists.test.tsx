@@ -1,43 +1,37 @@
-import { prisma } from '@/lib/db';
 import { createTestArtist, createTestClient, createTestReview } from '../../fixtures/testData';
+import { setupIntegrationTest, teardownIntegrationTest, getTestPrismaClient } from '../../utils/integration-test-setup';
 
 describe('Artists Page Integration Tests', () => {
+  let prisma: any;
   let testClients: any[] = [];
   let testArtists: any[] = [];
   let testReviews: any[] = [];
 
+  beforeAll(async () => {
+    prisma = await setupIntegrationTest();
+  });
+
+  afterAll(async () => {
+    await teardownIntegrationTest();
+  });
+
   beforeEach(async () => {
+    // Get fresh prisma client and ensure clean state
+    prisma = getTestPrismaClient();
+    
     // Clean up any existing test data
+    await prisma.review.deleteMany();
+    await prisma.client.deleteMany();
+    await prisma.makeupArtist.deleteMany();
+    
     testClients = [];
     testArtists = [];
     testReviews = [];
   });
 
   afterEach(async () => {
-    // Clean up test data in reverse order to avoid foreign key constraints
-    for (const review of testReviews) {
-      try {
-        await prisma.review.delete({ where: { id: review.id } });
-      } catch (e) {
-        // Review might already be deleted
-      }
-    }
-
-    for (const artist of testArtists) {
-      try {
-        await prisma.makeupArtist.delete({ where: { id: artist.id } });
-      } catch (e) {
-        // Artist might already be deleted
-      }
-    }
-
-    for (const client of testClients) {
-      try {
-        await prisma.client.delete({ where: { id: client.id } });
-      } catch (e) {
-        // Client might already be deleted
-      }
-    }
+    // Data will be cleaned up in beforeEach of next test
+    // This ensures consistent state
   });
 
   it('should create and retrieve artists with correct ratings', async () => {

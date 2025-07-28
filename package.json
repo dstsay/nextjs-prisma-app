@@ -20,10 +20,13 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:unit": "jest __tests__/unit",
-    "test:integration": "jest __tests__/integration",
+    "test:integration": "dotenv -e .env.test -- jest __tests__/integration --runInBand",
     "test:db": "dotenv -e .env.test -- jest",
     "test:ci": "jest --ci --coverage --maxWorkers=2",
     "test:cloudinary": "jest cloudinary",
+    "test:setup": "node scripts/setup-test-db.js",
+    "test:reset": "node scripts/reset-test-db-direct.js",
+    "test:integration:db": "npm run test:reset && npm run test:integration",
     "migrate:cloudinary": "tsx scripts/migrate-to-cloudinary.ts",
     "migrate:cloudinary:production": "tsx scripts/migrate-to-cloudinary-production.ts",
     "migrate:cloudinary:verify": "tsx scripts/verify-cloudinary-migration.ts",
@@ -33,6 +36,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.10.0",
     "@prisma/client": "^5.22.0",
     "@vercel/postgres": "^0.10.0",
     "aos": "^2.3.4",
@@ -43,6 +47,7 @@
     "gray-matter": "^4.0.3",
     "marked": "^16.0.0",
     "next": "15.3.5",
+    "next-auth": "^5.0.0-beta.29",
     "next-cloudinary": "^6.16.0",
     "next-mdx-remote": "^5.0.0",
     "react": "^18",
@@ -51,7 +56,8 @@
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.16.0",
     "remark-gfm": "^4.0.0",
-    "swiper": "^11.2.9"
+    "swiper": "^11.2.9",
+    "zod": "^4.0.10"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.4",
@@ -73,6 +79,7 @@
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.5",
     "jest-mock-extended": "^4.0.0",
+    "pg": "^8.16.3",
     "postcss": "^8",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.13",

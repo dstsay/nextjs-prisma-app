@@ -9,6 +9,8 @@ interface ArtistCardProps {
   artist: {
     id: string;
     name: string;
+    firstName: string | null;
+    lastName: string | null;
     profileImage: string | null;
     portfolioImages: string[];
     location: string | null;
@@ -29,6 +31,11 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
     ? artist.bio.substring(0, 150) + '...' 
     : artist.bio;
 
+  // Display name with firstName and lastName, fallback to name field
+  const displayName = artist.firstName || artist.lastName 
+    ? `${artist.firstName || ''} ${artist.lastName || ''}`.trim()
+    : artist.name;
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
       {/* Mobile Layout */}
@@ -39,7 +46,7 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
             <div className="absolute bottom-4 left-4 w-16 h-16 rounded-full border-4 border-white overflow-hidden">
               <CloudinaryImage
                 publicId={artist.profileImage}
-                alt={artist.name}
+                alt={displayName}
                 width={64}
                 height={64}
                 className="w-full h-full object-cover"
@@ -55,7 +62,7 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
         </div>
         
         <div className="p-4">
-          <h3 className="text-xl font-semibold mb-1">{artist.name}</h3>
+          <h3 className="text-xl font-semibold mb-1">{displayName}</h3>
           <RatingStars rating={averageRating} totalReviews={totalReviews} />
           
           {artist.badges.filter(b => b !== "Sponsored").map((badge, index) => (
@@ -94,7 +101,7 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
                 <div className="w-16 h-16 rounded-full overflow-hidden">
                   <CloudinaryImage
                     publicId={artist.profileImage}
-                    alt={artist.name}
+                    alt={displayName}
                     width={64}
                     height={64}
                     className="w-full h-full object-cover"
@@ -103,7 +110,7 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
                 </div>
               )}
               <div>
-                <h3 className="text-xl font-semibold mb-1">{artist.name}</h3>
+                <h3 className="text-xl font-semibold mb-1">{displayName}</h3>
                 <RatingStars rating={averageRating} totalReviews={totalReviews} />
                 {artist.location && (
                   <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
