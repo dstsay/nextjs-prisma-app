@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { hash } from "bcryptjs"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { generateVerificationToken, getVerificationExpiry, sendVerificationEmail } from "@/lib/email"
 
 const clientSignupSchema = z.object({
   username: z.string().min(3).max(20),
@@ -46,12 +47,12 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // Check if email already exists
-    const existingClientEmail = await prisma.client.findUnique({
-      where: { email: validatedData.email },
+    // Check if email already exists (case-insensitive)
+    const existingClientEmail = await prisma.client.findFirst({
+      where: { email: { equals: validatedData.email, mode: 'insensitive' } },
     })
-    const existingArtistEmail = await prisma.makeupArtist.findUnique({
-      where: { email: validatedData.email },
+    const existingArtistEmail = await prisma.makeupArtist.findFirst({
+      where: { email: { equals: validatedData.email, mode: 'insensitive' } },
     })
     
     if (existingClientEmail || existingArtistEmail) {
@@ -80,17 +81,31 @@ export async function POST(request: NextRequest) {
         userType: "artist",
       })
     } else {
+      // Generate verification token
+      const verificationToken = generateVerificationToken()
+      const verificationExpiry = getVerificationExpiry()
+
       const client = await prisma.client.create({
         data: {
           username: validatedData.username,
           email: validatedData.email,
           password: hashedPassword,
           name: validatedData.name,
+          emailVerificationToken: verificationToken,
+          emailVerificationExpires: verificationExpiry,
         },
       })
+
+      // Send verification email
+      try {
+        await sendVerificationEmail(client.email, client.username, verificationToken)
+      } catch (emailError) {
+        console.error("Failed to send verification email:", emailError)
+        // Continue with signup even if email fails
+      }
       
       return NextResponse.json({
-        message: "Client account created successfully",
+        message: "Client account created successfully. Please check your email to verify your account.",
         userType: "client",
       })
     }

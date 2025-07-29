@@ -38,6 +38,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
     "@prisma/client": "^5.22.0",
+    "@sendgrid/mail": "^8.1.5",
     "@vercel/postgres": "^0.10.0",
     "aos": "^2.3.4",
     "bcryptjs": "^3.0.2",
@@ -56,6 +57,7 @@
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.16.0",
     "remark-gfm": "^4.0.0",
+    "resend": "^4.7.0",
     "swiper": "^11.2.9",
     "zod": "^4.0.10"
   },

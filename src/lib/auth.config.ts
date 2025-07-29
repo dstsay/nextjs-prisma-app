@@ -60,12 +60,18 @@ export const authConfig = {
           return null
         }
 
+        // Check if email is verified
+        if (!client.emailVerified) {
+          throw new Error("Please verify your email before logging in")
+        }
+
         return {
           id: client.id,
           email: client.email,
           name: client.name,
           image: client.profileImage,
           userType: "client",
+          emailVerified: client.emailVerified,
         }
       },
     }),

@@ -1,8 +1,8 @@
-import { LoginForm } from "@/components/auth/LoginForm"
+import { SignupForm } from "@/components/auth/SignupForm"
 import { SocialLoginButtons } from "@/components/auth/SocialLoginButtons"
 import Link from "next/link"
 
-export default function ClientLoginPage() {
+export default function ClientSignupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-4 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-4">
@@ -27,21 +27,21 @@ export default function ClientLoginPage() {
             Back to Home
           </Link>
           <h2 className="mt-2 text-center text-2xl sm:text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            Create your account
           </h2>
           <p className="mt-1 text-center text-sm text-gray-600">
-            Welcome back! Please sign in to continue.
+            Join us to connect with professional makeup artists
           </p>
           <p className="mt-2 text-center text-sm">
-            <span className="text-gray-600">Don't have an account? </span>
-            <Link href="/auth/client/signup" className="font-medium text-blue-600 hover:text-blue-500">
-              Sign up
+            <span className="text-gray-600">Already have an account? </span>
+            <Link href="/auth/client/login" className="font-medium text-blue-600 hover:text-blue-500">
+              Sign in
             </Link>
           </p>
         </div>
 
         <div className="mt-4 bg-white py-6 px-4 shadow sm:rounded-lg sm:px-10">
-          <LoginForm userType="client" />
+          <SignupForm userType="client" />
 
           <div className="mt-4">
             <div className="relative">
@@ -49,7 +49,7 @@ export default function ClientLoginPage() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-white text-gray-500">Or sign up with</span>
               </div>
             </div>
 
@@ -61,8 +61,8 @@ export default function ClientLoginPage() {
           <div className="mt-4">
             <div className="text-center text-sm">
               <span className="text-gray-600">Are you a makeup artist? </span>
-              <Link href="/auth/artist/login" className="font-medium text-blue-600 hover:text-blue-500">
-                Sign in here
+              <Link href="/auth/artist/signup" className="font-medium text-blue-600 hover:text-blue-500">
+                Sign up here
               </Link>
             </div>
           </div>
