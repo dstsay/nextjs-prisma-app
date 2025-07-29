@@ -91,7 +91,7 @@ export function SignupForm({ userType }: SignupFormProps) {
             Account created successfully!
           </h3>
           <p className="text-green-700">
-            We've sent a verification email to {formData.email}.
+            We&apos;ve sent a verification email to {formData.email}.
           </p>
           <p className="text-green-700 mt-2">
             Please check your inbox and click the verification link to activate your account.

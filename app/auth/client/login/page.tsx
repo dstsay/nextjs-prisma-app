@@ -33,7 +33,7 @@ export default function ClientLoginPage() {
             Welcome back! Please sign in to continue.
           </p>
           <p className="mt-2 text-center text-sm">
-            <span className="text-gray-600">Don't have an account? </span>
+            <span className="text-gray-600">Don&apos;t have an account? </span>
             <Link href="/auth/client/signup" className="font-medium text-blue-600 hover:text-blue-500">
               Sign up
             </Link>
