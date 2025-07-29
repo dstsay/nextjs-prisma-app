@@ -40,6 +40,11 @@ export async function POST(request: NextRequest) {
       where: { username: validatedData.username },
     })
     
+    // Debug logging
+    console.log('Signup check for username:', validatedData.username)
+    console.log('Client found:', existingClient)
+    console.log('Artist found:', existingArtist)
+    
     if (existingClient || existingArtist) {
       return NextResponse.json(
         { error: "Username already taken" },
