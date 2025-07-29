@@ -61,8 +61,8 @@ export default function ClientSignupPage() {
           <div className="mt-4">
             <div className="text-center text-sm">
               <span className="text-gray-600">Are you a makeup artist? </span>
-              <Link href="/auth/artist/signup" className="font-medium text-blue-600 hover:text-blue-500">
-                Sign up here
+              <Link href="/auth/artist/login" className="font-medium text-blue-600 hover:text-blue-500">
+                Sign in here
               </Link>
             </div>
           </div>
