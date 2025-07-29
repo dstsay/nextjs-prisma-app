@@ -95,5 +95,14 @@ Required environment variables:
 
 
 ## Deployment
-1. Project is set up to be deployed to Vercel, Vercel production build will automatically occur once code is pushed to my github online.
-2. Project utilizes Vercel Postgres with automatic database migrations during build.
+
+Always run the Pre-push Checklist before deployment:
+
+1. Run lint check: npm run lint 
+2. Run build: npm run build - Catches TypeScript errors and build issues
+3. Run tests: npm test - Ensures tests pass
+
+Address any errors in the pre-push checklist before deploying.  Ask me for help if you need.
+
+-  Project is set up to be deployed to Vercel, Vercel production build will automatically occur once code is pushed to my github online.
+-  Project utilizes Vercel Postgres with automatic database migrations during build.
