@@ -5,6 +5,7 @@ import { WeeklySchedule } from './WeeklySchedule';
 import { AvailabilityPresets } from './AvailabilityPresets';
 import { ExceptionManager } from './ExceptionManager';
 import { useCSRFToken } from '@/hooks/useCSRFToken';
+import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 
 interface Availability {
   id?: string;
@@ -19,6 +20,9 @@ export function AvailabilityManager() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'schedule' | 'exceptions'>('schedule');
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState<'success' | 'error'>('success');
+  const [modalMessage, setModalMessage] = useState('');
   const csrfToken = useCSRFToken();
 
   useEffect(() => {
@@ -58,13 +62,19 @@ export function AvailabilityManager() {
       if (response.ok) {
         const data = await response.json();
         setSchedule(data);
-        alert('Availability saved successfully!');
+        setModalType('success');
+        setModalMessage('Your availability has been saved successfully!');
+        setShowModal(true);
       } else {
-        alert('Failed to save availability');
+        setModalType('error');
+        setModalMessage('Failed to save availability. Please try again.');
+        setShowModal(true);
       }
     } catch (error) {
       console.error('Error saving availability:', error);
-      alert('Failed to save availability');
+      setModalType('error');
+      setModalMessage('An error occurred while saving. Please try again.');
+      setShowModal(true);
     } finally {
       setSaving(false);
     }
@@ -133,6 +143,14 @@ export function AvailabilityManager() {
           <ExceptionManager />
         )}
       </div>
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        type={modalType}
+        message={modalMessage}
+      />
     </div>
   );
 }

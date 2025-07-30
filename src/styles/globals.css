@@ -4,6 +4,7 @@
 
 @import "./navigation.css";
 @import "./safe.css";
+@import "./animations.css";
 
 /* Base styles */
 @layer base {

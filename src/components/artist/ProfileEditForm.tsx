@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { useCSRFToken } from "@/hooks/useCSRFToken"
+import { ConfirmationModal } from "@/components/ui/ConfirmationModal"
 
 interface ArtistProfile {
   id: string
@@ -26,8 +28,10 @@ interface ProfileEditFormProps {
 export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [modalType, setModalType] = useState<'success' | 'error'>('success')
+  const [modalMessage, setModalMessage] = useState('')
+  const csrfToken = useCSRFToken()
   
   // Form state
   const [formData, setFormData] = useState({
@@ -44,8 +48,6 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
-    setSuccess(false)
     setIsLoading(true)
 
     try {
@@ -76,6 +78,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify(payload),
       })
@@ -86,13 +89,14 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
         throw new Error(data.error || "Failed to update profile")
       }
 
-      setSuccess(true)
+      setModalType('success')
+      setModalMessage('Your profile has been updated successfully!')
+      setShowModal(true)
       router.refresh()
-      
-      // Clear success message after 3 seconds
-      setTimeout(() => setSuccess(false), 3000)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred")
+      setModalType('error')
+      setModalMessage(err instanceof Error ? err.message : "An error occurred while updating your profile")
+      setShowModal(true)
     } finally {
       setIsLoading(false)
     }
@@ -108,17 +112,6 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
-          {error}
-        </div>
-      )}
-      
-      {success && (
-        <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-md">
-          Profile updated successfully!
-        </div>
-      )}
 
       {/* Read-only fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -305,6 +298,14 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
           {isLoading ? "Saving..." : "Save Profile"}
         </button>
       </div>
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        type={modalType}
+        message={modalMessage}
+      />
     </form>
   )
 }
