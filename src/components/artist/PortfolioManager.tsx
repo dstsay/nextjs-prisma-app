@@ -4,6 +4,7 @@ import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import CloudinaryImage from "../../../components/CloudinaryImage"
 import { isValidImageType, isValidFileSize } from "@/lib/cloudinary-utils"
+import { useCSRFToken } from "@/hooks/useCSRFToken"
 
 interface PortfolioManagerProps {
   artistId: string
@@ -19,6 +20,7 @@ export function PortfolioManager({ artistId, portfolioImages: initialImages, max
   const [isDeletingIndex, setIsDeletingIndex] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [showUploadArea, setShowUploadArea] = useState(false)
+  const csrfToken = useCSRFToken()
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -44,6 +46,9 @@ export function PortfolioManager({ artistId, portfolioImages: initialImages, max
 
         const uploadResponse = await fetch('/api/artist/upload', {
           method: 'POST',
+          headers: {
+            'X-CSRF-Token': csrfToken
+          },
           body: formData,
         })
 
@@ -58,6 +63,7 @@ export function PortfolioManager({ artistId, portfolioImages: initialImages, max
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'X-CSRF-Token': csrfToken
           },
           body: JSON.stringify({ publicId }),
         })
@@ -94,6 +100,9 @@ export function PortfolioManager({ artistId, portfolioImages: initialImages, max
     try {
       const response = await fetch(`/api/artist/portfolio/${index}`, {
         method: "DELETE",
+        headers: {
+          'X-CSRF-Token': csrfToken
+        }
       })
 
       if (!response.ok) {

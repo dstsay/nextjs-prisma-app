@@ -4,6 +4,7 @@ import { ProfileHeader } from "@/components/artist/ProfileHeader"
 import { TabNavigation } from "@/components/artist/TabNavigation"
 import { ProfileEditForm } from "@/components/artist/ProfileEditForm"
 import { PortfolioManager } from "@/components/artist/PortfolioManager"
+import { AvailabilityManager } from "../../../components/artist/AvailabilityManager"
 import { prisma } from "@/lib/prisma"
 
 export default async function ArtistDashboard() {
@@ -91,6 +92,11 @@ export default async function ArtistDashboard() {
           portfolioImages={artistProfile.portfolioImages || []} 
         />
       )
+    },
+    {
+      id: "availability",
+      label: "Availability",
+      content: <AvailabilityManager />
     }
   ]
 

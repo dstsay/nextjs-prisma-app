@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import ImageCarousel from './ImageCarousel';
 import RatingStars from './RatingStars';
 import CloudinaryImage from '../../components/CloudinaryImage';
@@ -26,6 +27,7 @@ interface ArtistCardProps {
 
 export default function ArtistCard({ artist, averageRating, totalReviews }: ArtistCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const router = useRouter();
   
   const truncatedBio = artist.bio && artist.bio.length > 150 
     ? artist.bio.substring(0, 150) + '...' 
@@ -82,7 +84,10 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
             </div>
           )}
           
-          <button className="w-full mt-4 bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-colors">
+          <button 
+            onClick={() => router.push(`/artists/${artist.id}/book`)}
+            className="w-full mt-4 bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-colors"
+          >
             Book Session
           </button>
         </div>
@@ -155,7 +160,10 @@ export default function ArtistCard({ artist, averageRating, totalReviews }: Arti
           </div>
           
           <div className="flex flex-col items-end">
-            <button className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors">
+            <button 
+              onClick={() => router.push(`/artists/${artist.id}/book`)}
+              className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors"
+            >
               Book Session
             </button>
             {artist.badges.includes("Sponsored") && (

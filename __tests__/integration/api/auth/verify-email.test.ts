@@ -2,11 +2,19 @@ import { NextRequest } from 'next/server'
 import { GET, POST } from '../../../../app/api/auth/verify-email/route'
 import { prisma } from '../../../../src/lib/prisma'
 import * as emailModule from '../../../../src/lib/email'
+import { createMockRequest } from '../../../helpers/api-test-helpers'
 
 jest.mock('../../../../src/lib/email', () => ({
   generateVerificationToken: jest.fn(() => 'new-verification-token'),
   getVerificationExpiry: jest.fn(() => new Date('2025-02-01')),
   sendVerificationEmail: jest.fn(),
+}))
+
+jest.mock('next/headers', () => ({
+  cookies: () => ({
+    get: jest.fn().mockReturnValue({ value: 'test-cookie' }),
+    set: jest.fn(),
+  })
 }))
 
 describe('Email Verification API', () => {
@@ -36,7 +44,9 @@ describe('Email Verification API', () => {
         },
       })
 
-      const request = new NextRequest('http://localhost:3000/api/auth/verify-email?token=valid-token')
+      const request = createMockRequest('/api/auth/verify-email', {
+        searchParams: { token: 'valid-token' }
+      })
       const response = await GET(request)
       const data = await response.json()
 

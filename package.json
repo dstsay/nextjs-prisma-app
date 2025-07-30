@@ -59,7 +59,7 @@
     "remark-gfm": "^4.0.0",
     "resend": "^4.7.0",
     "swiper": "^11.2.9",
-    "zod": "^4.0.10"
+    "zod": "^4.0.13"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.4",

@@ -63,6 +63,7 @@ model MakeupArtist {
   consultations     Consultation[]
   reviews           Review[]
   availability      Availability[]
+  availabilityExceptions AvailabilityException[]
   artistAccounts    ArtistAccount[]
   artistSessions    ArtistSession[]
 }
@@ -214,7 +215,7 @@ model Appointment {
   clientId          String
   artistId          String
   scheduledAt       DateTime
-  duration          Int             @default(30) // in minutes
+  duration          Int             @default(60) // Always 60 minutes (1 hour)
   status            AppointmentStatus @default(PENDING)
   type              AppointmentType @default(CONSULTATION)
   notes             String?
@@ -275,6 +276,21 @@ model Review {
   artist            MakeupArtist    @relation(fields: [artistId], references: [id])
 
   @@index([artistId])
+}
+
+model AvailabilityException {
+  id                String          @id @default(cuid())
+  artistId          String
+  date              DateTime        @db.Date
+  type              String          // "UNAVAILABLE" or "CUSTOM_HOURS"
+  startTime         String?         // "09:00" for custom hours
+  endTime           String?         // "17:00" for custom hours
+  reason            String?         // Optional: "Vacation", "Holiday", etc.
+  createdAt         DateTime        @default(now())
+  
+  artist            MakeupArtist    @relation(fields: [artistId], references: [id])
+  
+  @@index([artistId, date])
 }
 
 // Enums

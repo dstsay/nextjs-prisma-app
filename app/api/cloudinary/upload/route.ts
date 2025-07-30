@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createUploadSignature, uploadImage } from '../../../../lib/cloudinary';
+import { validateImageFile, validateImageContent, sanitizeFileName } from '@/lib/file-validation';
+import { validateCSRFToken } from '@/lib/csrf';
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate CSRF token
+    const isValidCSRF = await validateCSRFToken(request);
+    if (!isValidCSRF) {
+      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
+    }
     const contentType = request.headers.get('content-type') || '';
 
     // Handle signature request
@@ -29,19 +36,40 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      // Validate file
+      const fileValidation = validateImageFile(file);
+      if (!fileValidation.isValid) {
+        return NextResponse.json(
+          { error: fileValidation.error },
+          { status: 400 }
+        );
+      }
+
       // Convert File to Buffer
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
+
+      // Validate file content
+      const contentValidation = await validateImageContent(buffer);
+      if (!contentValidation.isValid) {
+        return NextResponse.json(
+          { error: contentValidation.error },
+          { status: 400 }
+        );
+      }
 
       // Create a data URL from the buffer
       const fileType = file.type || 'image/jpeg';
       const base64 = buffer.toString('base64');
       const dataUrl = `data:${fileType};base64,${base64}`;
 
+      // Sanitize public ID if provided
+      const sanitizedPublicId = publicId ? sanitizeFileName(publicId) : undefined;
+
       // Upload to Cloudinary
       const result = await uploadImage(dataUrl, {
         folder: folder || 'goldiegrace/uploads',
-        public_id: publicId || undefined,
+        public_id: sanitizedPublicId
       });
 
       return NextResponse.json({
