@@ -18,8 +18,9 @@ export function TimeSlotPicker({ artistId, date, onSelectTime, selectedTime }: T
   const fetchTimeSlots = useCallback(async () => {
     setLoading(true);
     try {
+      const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const response = await fetch(
-        `/api/artists/${artistId}/availability?date=${formatDateForAPI(date)}`
+        `/api/artists/${artistId}/availability?date=${formatDateForAPI(date)}&timezone=${encodeURIComponent(clientTimezone)}`
       );
       if (response.ok) {
         const data = await response.json();

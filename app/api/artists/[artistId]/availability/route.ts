@@ -11,6 +11,7 @@ export async function GET(
   try {
     const { searchParams } = new URL(request.url);
     const dateParam = searchParams.get('date');
+    const clientTimezone = searchParams.get('timezone') || 'UTC';
 
     if (!dateParam) {
       return NextResponse.json(
@@ -76,12 +77,12 @@ export async function GET(
       appointments
     };
 
-    const availableSlots = getAvailableSlots(date, availabilityData);
+    const availableSlots = getAvailableSlots(date, availabilityData, clientTimezone);
 
     return NextResponse.json({
       date: date.toISOString(),
       availableSlots,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      timezone: clientTimezone
     });
   } catch (error) {
     console.error('Error fetching availability:', error);

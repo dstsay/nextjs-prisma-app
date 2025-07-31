@@ -57,8 +57,9 @@ export function BookingCalendar({ artistId }: BookingCalendarProps) {
       const dates = new Set<string>();
 
       for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
+        const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         const response = await fetch(
-          `/api/artists/${artistId}/availability?date=${formatDateForAPI(d)}`
+          `/api/artists/${artistId}/availability?date=${formatDateForAPI(d)}&timezone=${encodeURIComponent(clientTimezone)}`
         );
         if (response.ok) {
           const data = await response.json();

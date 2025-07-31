@@ -43,7 +43,8 @@ export function generateTimeSlots(
 
 export function getAvailableSlots(
   date: Date,
-  availabilityData: AvailabilityData
+  availabilityData: AvailabilityData,
+  clientTimezone: string = 'UTC'
 ): TimeSlot[] {
   const dayOfWeek = getDayOfWeek(date);
   const dateStart = startOfDay(date);
@@ -111,22 +112,24 @@ export function getAvailableSlots(
     })
     .flat();
   
-  // Check if we're looking at today's date
+  // Check if we're looking at today's date in the client's timezone
   const now = new Date();
-  const isToday = isSameDay(date, now);
+  
+  // Convert server time to client timezone for comparison
+  const nowInClientTz = new Date(now.toLocaleString("en-US", { timeZone: clientTimezone }));
+  const dateInClientTz = new Date(date.toLocaleString("en-US", { timeZone: clientTimezone }));
+  
+  const isToday = isSameDay(dateInClientTz, nowInClientTz);
   
   // DEBUG: Enhanced logging for date comparison
   console.log('[availability-utils] Date comparison:', {
     dateParam: date.toISOString(),
-    dateYear: date.getFullYear(),
-    dateMonth: date.getMonth(),
-    dateDate: date.getDate(),
+    dateInClientTz: dateInClientTz.toISOString(),
     nowISO: now.toISOString(),
-    nowYear: now.getFullYear(),
-    nowMonth: now.getMonth(),
-    nowDate: now.getDate(),
-    isToday: isToday,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    nowInClientTz: nowInClientTz.toISOString(),
+    clientTimezone: clientTimezone,
+    serverTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    isToday: isToday
   });
   
   // DEBUG: Log current time and date being checked
@@ -147,20 +150,23 @@ export function getAvailableSlots(
     let isPast = false;
     if (isToday) {
       const [slotHour, slotMinute] = slot.split(':').map(Number);
+      
+      // Create a date object for the slot time
       const slotTime = new Date(date);
       slotTime.setHours(slotHour, slotMinute, 0, 0);
-      slotTime.setSeconds(0, 0); // Reset seconds and milliseconds
       
-      const nowCopy = new Date(now);
-      nowCopy.setSeconds(0, 0); // Reset seconds and milliseconds for fair comparison
+      // Get current time in client timezone
+      const nowInClientTzTime = new Date(now.toLocaleString("en-US", { timeZone: clientTimezone }));
       
-      isPast = slotTime.getTime() < nowCopy.getTime();
+      // Compare times in the same timezone context
+      isPast = slotTime.getTime() < nowInClientTzTime.getTime();
       
       // DEBUG: Log first few slots and last few slots
       const slotIndex = slots.indexOf(slot);
       if (slotIndex < 3 || slotIndex >= slots.length - 3) {
         console.log(`[availability-utils] Slot ${slot}:`, {
-          slotTime: slotTime.toLocaleTimeString(),
+          slotTime: slotTime.toLocaleString("en-US", { timeZone: clientTimezone }),
+          currentTime: nowInClientTzTime.toLocaleString("en-US", { timeZone: clientTimezone }),
           isPast,
           isBlocked,
           available: !isBlocked && !isPast
@@ -179,9 +185,10 @@ export function getAvailableSlots(
 export function checkSlotAvailable(
   date: Date,
   time: string,
-  availabilityData: AvailabilityData
+  availabilityData: AvailabilityData,
+  clientTimezone: string = 'UTC'
 ): boolean {
-  const slots = getAvailableSlots(date, availabilityData);
+  const slots = getAvailableSlots(date, availabilityData, clientTimezone);
   const slot = slots.find(s => s.time === time);
   return slot?.available || false;
 }
