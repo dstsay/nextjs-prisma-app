@@ -115,6 +115,20 @@ export function getAvailableSlots(
   const now = new Date();
   const isToday = isSameDay(date, now);
   
+  // DEBUG: Enhanced logging for date comparison
+  console.log('[availability-utils] Date comparison:', {
+    dateParam: date.toISOString(),
+    dateYear: date.getFullYear(),
+    dateMonth: date.getMonth(),
+    dateDate: date.getDate(),
+    nowISO: now.toISOString(),
+    nowYear: now.getFullYear(),
+    nowMonth: now.getMonth(),
+    nowDate: now.getDate(),
+    isToday: isToday,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+  });
+  
   // DEBUG: Log current time and date being checked
   if (isToday) {
     console.log('[availability-utils] Checking slots for today:', {

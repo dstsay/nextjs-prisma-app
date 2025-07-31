@@ -19,7 +19,10 @@ export async function GET(
       );
     }
 
-    const date = new Date(dateParam);
+    // Parse date as local date (not UTC)
+    const [year, month, day] = dateParam.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month is 0-indexed
+    
     if (isNaN(date.getTime())) {
       return NextResponse.json(
         { error: 'Invalid date format' },
@@ -29,6 +32,7 @@ export async function GET(
     
     // DEBUG: Log date parsing
     console.log('[availability API] Date param:', dateParam);
+    console.log('[availability API] Parsed date components:', { year, month, day });
     console.log('[availability API] Parsed date:', date.toISOString());
     console.log('[availability API] Local date string:', date.toDateString());
 
