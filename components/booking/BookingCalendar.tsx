@@ -100,7 +100,17 @@ export function BookingCalendar({ artistId }: BookingCalendarProps) {
   };
 
   const handlePreviousMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonth - 1));
+    const today = new Date();
+    const previousMonth = new Date(currentYear, currentMonth - 1);
+    
+    // Don't allow navigating to months before current month
+    if (previousMonth.getFullYear() < today.getFullYear() || 
+        (previousMonth.getFullYear() === today.getFullYear() && 
+         previousMonth.getMonth() < today.getMonth())) {
+      return;
+    }
+    
+    setCurrentDate(previousMonth);
     setSelectedDate(null);
     setSelectedTime(null);
   };
@@ -200,6 +210,11 @@ export function BookingCalendar({ artistId }: BookingCalendarProps) {
 
   const days = getDaysInMonth();
   const weekDays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  
+  // Check if we can navigate to previous month
+  const today = new Date();
+  const canGoPrevious = currentYear > today.getFullYear() || 
+                        (currentYear === today.getFullYear() && currentMonth > today.getMonth());
 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
@@ -211,8 +226,8 @@ export function BookingCalendar({ artistId }: BookingCalendarProps) {
           <div className="flex gap-2">
             <button
               onClick={handlePreviousMonth}
-              className="p-2 hover:bg-gray-100 rounded-md"
-              disabled={loading}
+              className={`p-2 rounded-md ${canGoPrevious && !loading ? 'hover:bg-gray-100' : 'opacity-50 cursor-not-allowed'}`}
+              disabled={loading || !canGoPrevious}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

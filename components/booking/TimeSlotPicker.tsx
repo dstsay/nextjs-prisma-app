@@ -43,38 +43,42 @@ export function TimeSlotPicker({ artistId, date, onSelectTime, selectedTime }: T
     return <div className="text-center py-4 text-gray-500">No available times for this date</div>;
   }
 
+  // Filter to only show available slots
+  const availableSlots = slots.filter(slot => slot.available);
+
   return (
     <div>
       <p className="text-sm text-gray-600 mb-3">
         Select a start time (appointments are 60 minutes)
       </p>
-      <div className="space-y-2 max-h-96 overflow-y-auto">
-        {slots.map((slot) => (
-          <button
-            key={slot.time}
-            onClick={() => onSelectTime(slot.time)}
-            disabled={!slot.available}
-            className={`
-              w-full py-3 px-4 rounded-md border text-center font-medium transition-colors
-              ${selectedTime === slot.time 
-                ? 'border-blue-600 bg-blue-50 text-blue-600' 
-                : slot.available
-                  ? 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
-                  : 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-              }
-            `}
-          >
-            <div>
-              <div className="font-medium">{slot.displayTime}</div>
-              {slot.available && (
+      {availableSlots.length === 0 ? (
+        <div className="text-center py-8 text-gray-500">
+          No available times for this date
+        </div>
+      ) : (
+        <div className="space-y-2 max-h-96 overflow-y-auto">
+          {availableSlots.map((slot) => (
+            <button
+              key={slot.time}
+              onClick={() => onSelectTime(slot.time)}
+              className={`
+                w-full py-3 px-4 rounded-md border text-center font-medium transition-colors
+                ${selectedTime === slot.time 
+                  ? 'border-blue-600 bg-blue-50 text-blue-600' 
+                  : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                }
+              `}
+            >
+              <div>
+                <div className="font-medium">{slot.displayTime}</div>
                 <div className="text-xs text-gray-500 mt-1">
                   60 min consultation
                 </div>
-              )}
-            </div>
-          </button>
-        ))}
-      </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -27,6 +27,20 @@ export async function GET(
       );
     }
 
+    // Check if the date is in the past
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const requestedDate = new Date(date);
+    requestedDate.setHours(0, 0, 0, 0);
+    
+    if (requestedDate < today) {
+      return NextResponse.json({
+        date: date.toISOString(),
+        availableSlots: [],
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      });
+    }
+
     const artist = await prisma.makeupArtist.findUnique({
       where: { id: params.artistId },
       select: { id: true }
