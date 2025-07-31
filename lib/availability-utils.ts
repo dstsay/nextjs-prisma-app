@@ -45,16 +45,6 @@ export function getAvailableSlots(
   date: Date,
   availabilityData: AvailabilityData
 ): TimeSlot[] {
-  // Check if the entire date is in the past
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const requestedDate = new Date(date);
-  requestedDate.setHours(0, 0, 0, 0);
-  
-  if (requestedDate < today) {
-    return [];
-  }
-
   const dayOfWeek = getDayOfWeek(date);
   const dateStart = startOfDay(date);
   const APPOINTMENT_DURATION_MINUTES = 60; // All appointments are 1 hour
