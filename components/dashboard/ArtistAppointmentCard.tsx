@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { differenceInMinutes, format, isPast, isWithinInterval, subMinutes } from 'date-fns';
+import { formatDuration } from '../../lib/date-utils';
 
 interface ArtistAppointmentCardProps {
   appointment: {
@@ -104,7 +105,7 @@ export function ArtistAppointmentCard({ appointment }: ArtistAppointmentCardProp
     if (timeUntilHost !== null) {
       return (
         <button disabled className="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-200 rounded-md cursor-not-allowed">
-          Host in {timeUntilHost} minute{timeUntilHost !== 1 ? 's' : ''}
+          Host in {formatDuration(timeUntilHost)}
         </button>
       );
     }

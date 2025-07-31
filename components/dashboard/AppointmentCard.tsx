@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { differenceInMinutes, format, isPast, isWithinInterval, subMinutes } from 'date-fns';
+import { formatDuration } from '../../lib/date-utils';
 
 interface AppointmentCardProps {
   appointment: {
@@ -103,7 +104,7 @@ export function AppointmentCard({ appointment }: AppointmentCardProps) {
     if (timeUntilJoin !== null) {
       return (
         <button disabled className="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-200 rounded-md cursor-not-allowed">
-          Join in {timeUntilJoin} minute{timeUntilJoin !== 1 ? 's' : ''}
+          Join in {formatDuration(timeUntilJoin)}
         </button>
       );
     }

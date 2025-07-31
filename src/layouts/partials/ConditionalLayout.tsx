@@ -9,7 +9,7 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
   
   // Hide header and footer on auth pages, artist dashboard, booking pages, and video rooms
   const isAuthPage = pathname?.startsWith("/auth/");
-  const isArtistDashboard = pathname === "/artist/dashboard";
+  const isArtistDashboard = pathname?.startsWith("/artist/dashboard");
   const isBookingPage = pathname?.includes("/artists/") && pathname?.includes("/book");
   const isVideoRoom = pathname?.includes("/consultation/") && pathname?.includes("/join");
   const isArtistVideoRoom = pathname?.includes("/consultation/") && pathname?.includes("/host");

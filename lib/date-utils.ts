@@ -68,3 +68,35 @@ export function getShortDayName(dayIndex: number): string {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   return days[dayIndex];
 }
+
+export function formatDuration(totalMinutes: number): string {
+  if (totalMinutes <= 0) return '0 minutes';
+  
+  const days = Math.floor(totalMinutes / (24 * 60));
+  const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+  const minutes = totalMinutes % 60;
+  
+  const parts: string[] = [];
+  
+  if (days > 0) {
+    parts.push(`${days} day${days !== 1 ? 's' : ''}`);
+  }
+  
+  if (hours > 0) {
+    parts.push(`${hours} hour${hours !== 1 ? 's' : ''}`);
+  }
+  
+  if (minutes > 0) {
+    parts.push(`${minutes} minute${minutes !== 1 ? 's' : ''}`);
+  }
+  
+  // Join with commas and 'and' for the last item
+  if (parts.length === 1) {
+    return parts[0];
+  } else if (parts.length === 2) {
+    return parts.join(' and ');
+  } else {
+    const lastPart = parts.pop();
+    return `${parts.join(', ')} and ${lastPart}`;
+  }
+}
