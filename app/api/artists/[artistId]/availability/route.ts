@@ -26,6 +26,11 @@ export async function GET(
         { status: 400 }
       );
     }
+    
+    // DEBUG: Log date parsing
+    console.log('[availability API] Date param:', dateParam);
+    console.log('[availability API] Parsed date:', date.toISOString());
+    console.log('[availability API] Local date string:', date.toDateString());
 
 
     const artist = await prisma.makeupArtist.findUnique({

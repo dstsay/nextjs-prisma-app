@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { TimeSlot } from '../../lib/availability-utils';
+import { formatDateForAPI } from '../../lib/date-utils';
 
 interface TimeSlotPickerProps {
   artistId: string;
@@ -18,7 +19,7 @@ export function TimeSlotPicker({ artistId, date, onSelectTime, selectedTime }: T
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/artists/${artistId}/availability?date=${date.toISOString()}`
+        `/api/artists/${artistId}/availability?date=${formatDateForAPI(date)}`
       );
       if (response.ok) {
         const data = await response.json();

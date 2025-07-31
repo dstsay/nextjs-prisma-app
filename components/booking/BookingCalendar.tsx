@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { getMonthName, getShortDayName, getDayOfWeek } from '../../lib/date-utils';
+import { getMonthName, getShortDayName, getDayOfWeek, formatDateForAPI } from '../../lib/date-utils';
 import { TimeSlotPicker } from './TimeSlotPicker';
 
 interface BookingCalendarProps {
@@ -58,7 +58,7 @@ export function BookingCalendar({ artistId }: BookingCalendarProps) {
 
       for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
         const response = await fetch(
-          `/api/artists/${artistId}/availability?date=${d.toISOString()}`
+          `/api/artists/${artistId}/availability?date=${formatDateForAPI(d)}`
         );
         if (response.ok) {
           const data = await response.json();
