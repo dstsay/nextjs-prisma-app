@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if it's in the future
-    if (appointmentDate <= new Date()) {
+    if (appointmentDate < new Date()) {
       return NextResponse.json(
         { error: 'Cannot book appointments in the past' },
         { status: 400 }

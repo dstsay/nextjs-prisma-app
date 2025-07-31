@@ -135,7 +135,7 @@ export function getAvailableSlots(
       const [slotHour, slotMinute] = slot.split(':').map(Number);
       const slotTime = new Date(date);
       slotTime.setHours(slotHour, slotMinute, 0, 0);
-      isPast = slotTime <= now;
+      isPast = slotTime < now;
     }
     
     return {
