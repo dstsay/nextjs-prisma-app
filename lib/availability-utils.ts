@@ -115,6 +115,16 @@ export function getAvailableSlots(
   const now = new Date();
   const isToday = isSameDay(date, now);
   
+  // DEBUG: Log current time and date being checked
+  if (isToday) {
+    console.log('[availability-utils] Checking slots for today:', {
+      currentTime: now.toLocaleTimeString(),
+      currentHour: now.getHours(),
+      currentMinute: now.getMinutes(),
+      dateChecking: date.toDateString()
+    });
+  }
+  
   return slots.map(slot => {
     // Check if slot is blocked by existing appointments
     const isBlocked = blockedTimeRanges.includes(slot);
@@ -125,7 +135,23 @@ export function getAvailableSlots(
       const [slotHour, slotMinute] = slot.split(':').map(Number);
       const slotTime = new Date(date);
       slotTime.setHours(slotHour, slotMinute, 0, 0);
-      isPast = slotTime < now;
+      slotTime.setSeconds(0, 0); // Reset seconds and milliseconds
+      
+      const nowCopy = new Date(now);
+      nowCopy.setSeconds(0, 0); // Reset seconds and milliseconds for fair comparison
+      
+      isPast = slotTime.getTime() < nowCopy.getTime();
+      
+      // DEBUG: Log first few slots and last few slots
+      const slotIndex = slots.indexOf(slot);
+      if (slotIndex < 3 || slotIndex >= slots.length - 3) {
+        console.log(`[availability-utils] Slot ${slot}:`, {
+          slotTime: slotTime.toLocaleTimeString(),
+          isPast,
+          isBlocked,
+          available: !isBlocked && !isPast
+        });
+      }
     }
     
     return {

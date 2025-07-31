@@ -45,6 +45,22 @@ export function TimeSlotPicker({ artistId, date, onSelectTime, selectedTime }: T
 
   // Filter to only show available slots
   const availableSlots = slots.filter(slot => slot.available);
+  
+  // DEBUG: Log filtering results
+  console.log('[TimeSlotPicker] Filtering slots:', {
+    totalSlots: slots.length,
+    availableSlots: availableSlots.length,
+    firstFewSlots: slots.slice(0, 5).map(s => ({
+      time: s.time,
+      available: s.available,
+      displayTime: s.displayTime
+    })),
+    lastFewSlots: slots.slice(-5).map(s => ({
+      time: s.time,
+      available: s.available,
+      displayTime: s.displayTime
+    }))
+  });
 
   return (
     <div>
