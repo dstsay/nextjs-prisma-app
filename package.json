@@ -39,6 +39,7 @@
     "@auth/prisma-adapter": "^2.10.0",
     "@prisma/client": "^5.22.0",
     "@sendgrid/mail": "^8.1.5",
+    "@types/twilio-video": "^2.7.3",
     "@vercel/postgres": "^0.10.0",
     "aos": "^2.3.4",
     "bcryptjs": "^3.0.2",
@@ -59,6 +60,8 @@
     "remark-gfm": "^4.0.0",
     "resend": "^4.7.0",
     "swiper": "^11.2.9",
+    "twilio": "^5.8.0",
+    "twilio-video": "^2.32.0",
     "zod": "^4.0.13"
   },
   "devDependencies": {

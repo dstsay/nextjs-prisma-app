@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma"
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams
+    const searchParams = request.nextUrl?.searchParams || new URLSearchParams()
     const token = searchParams.get("token")
 
     if (!token) {

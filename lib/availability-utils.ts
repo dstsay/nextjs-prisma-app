@@ -16,7 +16,7 @@ export interface AvailabilityData {
 export function generateTimeSlots(
   startTime: string,
   endTime: string,
-  intervalMinutes: number = 60
+  intervalMinutes: number = 30
 ): string[] {
   const slots: string[] = [];
   const start = parseTime(startTime);
@@ -47,6 +47,7 @@ export function getAvailableSlots(
 ): TimeSlot[] {
   const dayOfWeek = getDayOfWeek(date);
   const dateStart = startOfDay(date);
+  const APPOINTMENT_DURATION_MINUTES = 60; // All appointments are 1 hour
   
   const exception = availabilityData.exceptions.find(exc =>
     isSameDay(new Date(exc.date), date)
@@ -74,21 +75,65 @@ export function getAvailableSlots(
   
   const slots = generateTimeSlots(daySchedule.startTime, daySchedule.endTime);
   
-  const bookedSlots = availabilityData.appointments
+  // Get all blocked time ranges from existing appointments
+  const blockedTimeRanges = availabilityData.appointments
     .filter(apt => 
       isSameDay(new Date(apt.scheduledAt), date) &&
       apt.status !== 'CANCELLED'
     )
     .map(apt => {
       const aptDate = new Date(apt.scheduledAt);
-      return formatTime24(aptDate.getHours(), aptDate.getMinutes());
-    });
+      const aptHour = aptDate.getHours();
+      const aptMinute = aptDate.getMinutes();
+      
+      // Calculate the range of slots that would conflict with this appointment
+      // An appointment blocks its start time and any slot that would overlap
+      const blockedSlots: string[] = [];
+      
+      // Block the appointment time itself
+      blockedSlots.push(formatTime24(aptHour, aptMinute));
+      
+      // Block slots that would overlap if booked (30 minutes before)
+      if (aptMinute >= 30) {
+        blockedSlots.push(formatTime24(aptHour, aptMinute - 30));
+      } else if (aptHour > 0) {
+        blockedSlots.push(formatTime24(aptHour - 1, 30));
+      }
+      
+      // Block slots within the appointment duration (30 minutes after start)
+      if (aptMinute < 30) {
+        blockedSlots.push(formatTime24(aptHour, aptMinute + 30));
+      } else if (aptHour < 23) {
+        blockedSlots.push(formatTime24(aptHour + 1, 0));
+      }
+      
+      return blockedSlots;
+    })
+    .flat();
   
-  return slots.map(slot => ({
-    time: slot,
-    available: !bookedSlots.includes(slot),
-    displayTime: formatTime(slot)
-  }));
+  // Check if we're looking at today's date
+  const now = new Date();
+  const isToday = isSameDay(date, now);
+  
+  return slots.map(slot => {
+    // Check if slot is blocked by existing appointments
+    const isBlocked = blockedTimeRanges.includes(slot);
+    
+    // Check if slot is in the past (only for today)
+    let isPast = false;
+    if (isToday) {
+      const [slotHour, slotMinute] = slot.split(':').map(Number);
+      const slotTime = new Date(date);
+      slotTime.setHours(slotHour, slotMinute, 0, 0);
+      isPast = slotTime <= now;
+    }
+    
+    return {
+      time: slot,
+      available: !isBlocked && !isPast,
+      displayTime: formatTime(slot)
+    };
+  });
 }
 
 export function checkSlotAvailable(

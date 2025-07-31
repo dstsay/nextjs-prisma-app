@@ -4,6 +4,7 @@ import { POST as uploadPOST } from '../../../app/api/artist/upload/route'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { hashToken } from '@/lib/csrf'
+import { createMockRequest, mockCookiesFunction } from '../../helpers/api-test-helpers'
 
 // Mock auth
 jest.mock('@/lib/auth', () => ({
@@ -26,15 +27,7 @@ jest.mock('@/lib/prisma', () => ({
 
 // Mock next/headers
 jest.mock('next/headers', () => ({
-  cookies: jest.fn(() => ({
-    get: jest.fn((name) => {
-      if (name === 'csrf-token') {
-        return { value: hashToken('valid-csrf-token') }
-      }
-      return undefined
-    }),
-    set: jest.fn(),
-  }))
+  cookies: mockCookiesFunction()
 }))
 
 describe('API Security Tests', () => {
@@ -50,19 +43,17 @@ describe('API Security Tests', () => {
         expires: new Date().toISOString()
       })
 
-      const request = new NextRequest('http://localhost:3000/api/artist/availability', {
+      const request = createMockRequest('/api/artist/availability', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+        body: {
           schedule: [{
             dayOfWeek: 1,
             startTime: '09:00',
             endTime: '17:00',
             isActive: true
           }]
-        })
+        },
+        includeCSRF: false // Explicitly no CSRF token
       })
 
       const response = await availabilityPOST(request)
@@ -94,20 +85,17 @@ describe('API Security Tests', () => {
         }
       ])
 
-      const request = new NextRequest('http://localhost:3000/api/artist/availability', {
+      const request = createMockRequest('/api/artist/availability', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': 'valid-csrf-token'
-        },
-        body: JSON.stringify({
+        body: {
           schedule: [{
             dayOfWeek: 1,
             startTime: '09:00',
             endTime: '17:00',
             isActive: true
           }]
-        })
+        },
+        includeCSRF: true // Include valid CSRF token
       })
 
       const response = await availabilityPOST(request)
@@ -130,20 +118,17 @@ describe('API Security Tests', () => {
       const mockPrisma = prisma as any
       mockPrisma.makeupArtist.findUnique.mockResolvedValue({ id: 'artist123' })
 
-      const request = new NextRequest('http://localhost:3000/api/artist/availability', {
+      const request = createMockRequest('/api/artist/availability', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': 'valid-csrf-token'
-        },
-        body: JSON.stringify({
+        body: {
           schedule: [{
             dayOfWeek: 1,
             startTime: '25:00', // Invalid hour
             endTime: '17:00',
             isActive: true
           }]
-        })
+        },
+        includeCSRF: true
       })
 
       const response = await availabilityPOST(request)
@@ -163,20 +148,17 @@ describe('API Security Tests', () => {
       const mockPrisma = prisma as any
       mockPrisma.makeupArtist.findUnique.mockResolvedValue({ id: 'artist123' })
 
-      const request = new NextRequest('http://localhost:3000/api/artist/availability', {
+      const request = createMockRequest('/api/artist/availability', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': 'valid-csrf-token'
-        },
-        body: JSON.stringify({
+        body: {
           schedule: [{
             dayOfWeek: 1,
             startTime: '17:00',
             endTime: '09:00', // End before start
             isActive: true
           }]
-        })
+        },
+        includeCSRF: true
       })
 
       const response = await availabilityPOST(request)
@@ -196,20 +178,17 @@ describe('API Security Tests', () => {
       const mockPrisma = prisma as any
       mockPrisma.makeupArtist.findUnique.mockResolvedValue({ id: 'artist123' })
 
-      const request = new NextRequest('http://localhost:3000/api/artist/availability', {
+      const request = createMockRequest('/api/artist/availability', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': 'valid-csrf-token'
-        },
-        body: JSON.stringify({
+        body: {
           schedule: [{
             dayOfWeek: 7, // Invalid (should be 0-6)
             startTime: '09:00',
             endTime: '17:00',
             isActive: true
           }]
-        })
+        },
+        includeCSRF: true
       })
 
       const response = await availabilityPOST(request)

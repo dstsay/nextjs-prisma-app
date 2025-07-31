@@ -5,6 +5,7 @@ import { TabNavigation } from "@/components/artist/TabNavigation"
 import { ProfileEditForm } from "@/components/artist/ProfileEditForm"
 import { PortfolioManager } from "@/components/artist/PortfolioManager"
 import { AvailabilityManager } from "../../../components/artist/AvailabilityManager"
+import { ArtistAppointmentCard } from "../../../components/dashboard/ArtistAppointmentCard"
 import { prisma } from "@/lib/prisma"
 
 export default async function ArtistDashboard() {
@@ -47,6 +48,43 @@ export default async function ArtistDashboard() {
     : 0
   const totalReviews = artistProfile.reviews.length
 
+  // Fetch appointments and calculate statistics
+  const appointments = await prisma.appointment.findMany({
+    where: { artistId: user.id },
+    include: {
+      client: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          email: true,
+        },
+      },
+      consultation: {
+        select: {
+          id: true,
+        },
+      },
+    },
+    orderBy: {
+      scheduledAt: 'asc',
+    },
+  });
+
+  // Calculate statistics
+  const now = new Date();
+  const upcomingAppointments = appointments.filter(
+    apt => 
+      (apt.status === 'CONFIRMED' || apt.status === 'PENDING') &&
+      apt.scheduledAt > now
+  );
+  
+  const completedConsultations = appointments.filter(
+    apt => apt.status === 'COMPLETED' && apt.type === 'CONSULTATION'
+  ).length;
+
+  const uniqueClients = new Set(appointments.map(apt => apt.clientId)).size;
+
   // Create tabs for the dashboard
   const tabs = [
     {
@@ -57,18 +95,36 @@ export default async function ArtistDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-blue-50 rounded-lg p-4">
               <h3 className="font-semibold text-blue-900">Upcoming Appointments</h3>
-              <p className="text-blue-700 mt-2">No appointments scheduled</p>
+              <p className="text-2xl font-bold text-blue-700 mt-2">{upcomingAppointments.length}</p>
             </div>
             
             <div className="bg-green-50 rounded-lg p-4">
               <h3 className="font-semibold text-green-900">Total Clients</h3>
-              <p className="text-green-700 mt-2">0 clients</p>
+              <p className="text-2xl font-bold text-green-700 mt-2">{uniqueClients}</p>
             </div>
             
             <div className="bg-purple-50 rounded-lg p-4">
-              <h3 className="font-semibold text-purple-900">Reviews</h3>
-              <p className="text-purple-700 mt-2">{totalReviews} {totalReviews === 1 ? 'review' : 'reviews'}</p>
+              <h3 className="font-semibold text-purple-900">Consultations Completed</h3>
+              <p className="text-2xl font-bold text-purple-700 mt-2">{completedConsultations}</p>
             </div>
+          </div>
+
+          {/* Upcoming Appointments List */}
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Upcoming Appointments
+            </h2>
+            {upcomingAppointments.length > 0 ? (
+              <div className="grid gap-4">
+                {upcomingAppointments.map((appointment) => (
+                  <ArtistAppointmentCard key={appointment.id} appointment={appointment} />
+                ))}
+              </div>
+            ) : (
+              <div className="bg-gray-50 rounded-lg p-8 text-center">
+                <p className="text-gray-600">No upcoming appointments scheduled</p>
+              </div>
+            )}
           </div>
         </div>
       )

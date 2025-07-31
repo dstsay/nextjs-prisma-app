@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { getMonthName, getShortDayName, getDayOfWeek } from '../../lib/date-utils';
 import { TimeSlotPicker } from './TimeSlotPicker';
 
@@ -9,14 +11,43 @@ interface BookingCalendarProps {
 }
 
 export function BookingCalendar({ artistId }: BookingCalendarProps) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [availableDates, setAvailableDates] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [bookingInProgress, setBookingInProgress] = useState(false);
 
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
+
+  // Check for stored booking details on mount (for post-auth redirect)
+  useEffect(() => {
+    const storedBooking = sessionStorage.getItem('pendingBooking');
+    if (storedBooking && status === 'authenticated') {
+      try {
+        const booking = JSON.parse(storedBooking);
+        if (booking.artistId === artistId) {
+          setSelectedDate(new Date(booking.date));
+          setSelectedTime(booking.time);
+          // Clear stored booking
+          sessionStorage.removeItem('pendingBooking');
+          // Auto-trigger booking after state is set
+          setTimeout(() => {
+            const confirmButton = document.querySelector('[data-confirm-booking]') as HTMLButtonElement;
+            if (confirmButton) {
+              confirmButton.click();
+            }
+          }, 500);
+        }
+      } catch (error) {
+        console.error('Error restoring booking:', error);
+        sessionStorage.removeItem('pendingBooking');
+      }
+    }
+  }, [artistId, status]);
 
   const fetchMonthAvailability = useCallback(async () => {
     setLoading(true);
@@ -105,9 +136,55 @@ export function BookingCalendar({ artistId }: BookingCalendarProps) {
     setSelectedTime(time);
   };
 
-  const handleConfirm = () => {
-    if (selectedDate && selectedTime) {
-      console.log('Booking confirmation - Date:', selectedDate, 'Time:', selectedTime);
+  const handleConfirm = async () => {
+    if (!selectedDate || !selectedTime) return;
+
+    // Check if user is authenticated
+    if (status === 'unauthenticated' || !session) {
+      // Store booking details in sessionStorage
+      const bookingDetails = {
+        artistId,
+        date: selectedDate.toISOString(),
+        time: selectedTime,
+        returnUrl: window.location.pathname
+      };
+      sessionStorage.setItem('pendingBooking', JSON.stringify(bookingDetails));
+      
+      // Redirect to client login with return URL
+      router.push(`/auth/client/login?callbackUrl=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+
+    // User is authenticated, proceed with booking
+    setBookingInProgress(true);
+    
+    try {
+      const response = await fetch('/api/appointments/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          artistId,
+          date: selectedDate.toISOString(),
+          time: selectedTime,
+          type: 'CONSULTATION',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create appointment');
+      }
+
+      // Success! Redirect to confirmation or appointments page
+      router.push(`/appointments/${data.appointment.id}/confirmation`);
+    } catch (error) {
+      console.error('Booking error:', error);
+      alert(error instanceof Error ? error.message : 'Failed to book appointment. Please try again.');
+    } finally {
+      setBookingInProgress(false);
     }
   };
 
@@ -221,15 +298,16 @@ export function BookingCalendar({ artistId }: BookingCalendarProps) {
             />
             <button
               onClick={handleConfirm}
-              disabled={!selectedTime}
+              disabled={!selectedTime || bookingInProgress}
+              data-confirm-booking
               className={`
                 mt-6 w-full py-3 rounded-md font-medium transition-colors
-                ${selectedTime 
+                ${selectedTime && !bookingInProgress
                   ? 'bg-green-600 text-white hover:bg-green-700' 
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
               `}
             >
-              Confirm Booking
+              {bookingInProgress ? 'Booking...' : 'Confirm Booking'}
             </button>
           </>
         ) : (

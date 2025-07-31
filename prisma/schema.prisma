@@ -244,6 +244,14 @@ model Consultation {
   notes             String?
   recommendations   Json?           // Product recommendations as JSON
   followUpDate      DateTime?
+  // Twilio Video fields
+  twilioRoomSid     String?         // Twilio's unique room identifier
+  twilioRoomName    String?         // Human-readable room name
+  twilioRoomStatus  String?         // "in-progress", "completed"
+  waitingRoomStatus String?         // "empty", "client-waiting", "artist-waiting"
+  sessionStartedAt  DateTime?       // When artist starts the session
+  sessionEndedAt    DateTime?       // When session ends
+  recordingSid      String?         // If recording enabled
   
   appointment       Appointment     @relation(fields: [appointmentId], references: [id])
   client            Client          @relation(fields: [clientId], references: [id])

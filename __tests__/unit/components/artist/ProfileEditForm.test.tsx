@@ -6,10 +6,18 @@ import { ProfileEditForm } from "@/components/artist/ProfileEditForm"
 // Mock next/navigation
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
+  useSearchParams: jest.fn(() => ({
+    get: jest.fn(),
+  })),
 }))
 
 // Mock global fetch
 global.fetch = jest.fn()
+
+// Mock CSRF token
+jest.mock('@/lib/csrf', () => ({
+  getCsrfToken: jest.fn().mockResolvedValue('mock-csrf-token'),
+}))
 
 describe("ProfileEditForm", () => {
   const mockRefresh = jest.fn()
@@ -95,7 +103,10 @@ describe("ProfileEditForm", () => {
     await waitFor(() => {
       expect(mockFetch).toHaveBeenCalledWith("/api/artist/profile", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          'X-CSRF-Token': 'mock-csrf-token'
+        },
         body: JSON.stringify({
           name: "Test Artist",
           bio: "Test bio",
@@ -259,7 +270,10 @@ describe("ProfileEditForm", () => {
     await waitFor(() => {
       expect(mockFetch).toHaveBeenCalledWith("/api/artist/profile", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          'X-CSRF-Token': 'mock-csrf-token'
+        },
         body: expect.stringContaining('"specialties":[]'),
       })
     })
