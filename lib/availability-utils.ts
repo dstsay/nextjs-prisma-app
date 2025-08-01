@@ -115,21 +115,35 @@ export function getAvailableSlots(
   // Check if we're looking at today's date in the client's timezone
   const now = new Date();
   
-  // Convert server time to client timezone for comparison
-  const nowInClientTz = new Date(now.toLocaleString("en-US", { timeZone: clientTimezone }));
-  const dateInClientTz = new Date(date.toLocaleString("en-US", { timeZone: clientTimezone }));
+  // Get current time in client's timezone to check if it's "today" for them
+  const clientFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: clientTimezone,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  });
   
-  const isToday = isSameDay(dateInClientTz, nowInClientTz);
+  const clientNowParts = clientFormatter.formatToParts(now);
+  const clientDateParts = clientFormatter.formatToParts(date);
+  
+  const nowYear = parseInt(clientNowParts.find(p => p.type === 'year')?.value || '0');
+  const nowMonth = parseInt(clientNowParts.find(p => p.type === 'month')?.value || '0');
+  const nowDay = parseInt(clientNowParts.find(p => p.type === 'day')?.value || '0');
+  
+  const dateYear = parseInt(clientDateParts.find(p => p.type === 'year')?.value || '0');
+  const dateMonth = parseInt(clientDateParts.find(p => p.type === 'month')?.value || '0');
+  const dateDay = parseInt(clientDateParts.find(p => p.type === 'day')?.value || '0');
+  
+  const isToday = nowYear === dateYear && nowMonth === dateMonth && nowDay === dateDay;
   
   // DEBUG: Enhanced logging for date comparison
   console.log('[availability-utils] Date comparison:', {
     dateParam: date.toISOString(),
-    dateInClientTz: dateInClientTz.toISOString(),
-    nowISO: now.toISOString(),
-    nowInClientTz: nowInClientTz.toISOString(),
     clientTimezone: clientTimezone,
-    serverTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    isToday: isToday
+    clientNow: `${nowYear}-${nowMonth}-${nowDay}`,
+    clientDate: `${dateYear}-${dateMonth}-${dateDay}`,
+    isToday: isToday,
+    serverTime: now.toISOString()
   });
   
   // DEBUG: Log current time and date being checked
@@ -151,22 +165,29 @@ export function getAvailableSlots(
     if (isToday) {
       const [slotHour, slotMinute] = slot.split(':').map(Number);
       
-      // Create a date object for the slot time
-      const slotTime = new Date(date);
-      slotTime.setHours(slotHour, slotMinute, 0, 0);
+      // Get the current time in the client's timezone
+      const clientTimeFormatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: clientTimezone,
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false
+      });
       
-      // Get current time in client timezone
-      const nowInClientTzTime = new Date(now.toLocaleString("en-US", { timeZone: clientTimezone }));
+      const currentTimeParts = clientTimeFormatter.formatToParts(now);
+      const currentHour = parseInt(currentTimeParts.find(p => p.type === 'hour')?.value || '0');
+      const currentMinute = parseInt(currentTimeParts.find(p => p.type === 'minute')?.value || '0');
       
-      // Compare times in the same timezone context
-      isPast = slotTime.getTime() < nowInClientTzTime.getTime();
+      // Simple comparison: if the slot hour is less than current hour, it's past
+      // If same hour, check minutes
+      isPast = slotHour < currentHour || (slotHour === currentHour && slotMinute <= currentMinute);
       
       // DEBUG: Log first few slots and last few slots
       const slotIndex = slots.indexOf(slot);
       if (slotIndex < 3 || slotIndex >= slots.length - 3) {
         console.log(`[availability-utils] Slot ${slot}:`, {
-          slotTime: slotTime.toLocaleString("en-US", { timeZone: clientTimezone }),
-          currentTime: nowInClientTzTime.toLocaleString("en-US", { timeZone: clientTimezone }),
+          slotTime: `${slotHour}:${slotMinute}`,
+          currentTime: `${currentHour}:${currentMinute}`,
+          clientTimezone,
           isPast,
           isBlocked,
           available: !isBlocked && !isPast
