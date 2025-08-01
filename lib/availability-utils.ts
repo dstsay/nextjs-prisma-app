@@ -168,15 +168,122 @@ export function getAvailableSlots(
       const [slotHour, slotMinute] = slot.split(':').map(Number);
       
       // The slot times (like "09:00") are in the artist's timezone
-      // We need to check if this slot is in the past
+      // We need to convert this to UTC for comparison
       
-      // Create a Date object for the slot in the artist's timezone
-      const slotDateTime = new Date(date);
-      slotDateTime.setHours(slotHour, slotMinute, 0, 0);
+      // Get the date string (e.g., "2025-07-31")
+      const dateStr = dateString || formatDateForAPI(date);
       
-      // Get current time to compare
-      // Since we're comparing absolute times, we can just use UTC comparison
-      isPast = slotDateTime.getTime() <= now.getTime();
+      // Create a date string in ISO format for the slot time
+      // This will be interpreted as the local time wherever the code runs
+      const slotDateTimeStr = `${dateStr}T${slot}:00`;
+      
+      // Use Intl.DateTimeFormat to convert between timezones
+      // First, format the slot time as if it's in the artist's timezone
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: artistTimezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZoneName: 'short'
+      });
+      
+      // Parse the date string to get year, month, day
+      const [year, month, day] = dateStr.split('-').map(Number);
+      
+      // Create a date object for noon on the target date in the artist's timezone
+      // This helps us determine the correct timezone offset for that day (accounting for DST)
+      const noonLocal = new Date(year, month - 1, day, 12, 0, 0);
+      
+      // Format this date in the artist's timezone and UTC to calculate offset
+      const artistTzStr = noonLocal.toLocaleString('en-US', { 
+        timeZone: artistTimezone, 
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+      
+      const utcStr = noonLocal.toLocaleString('en-US', { 
+        timeZone: 'UTC',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+      
+      // Extract hours from both strings to calculate offset
+      const artistTzHour = parseInt(artistTzStr.split(' ')[1].split(':')[0]);
+      const utcHour = parseInt(utcStr.split(' ')[1].split(':')[0]);
+      
+      // Calculate the timezone offset in hours
+      // This accounts for DST automatically
+      let offsetHours = utcHour - artistTzHour;
+      
+      // Handle day boundary crossing
+      if (offsetHours > 12) {
+        offsetHours -= 24;
+      } else if (offsetHours < -12) {
+        offsetHours += 24;
+      }
+      
+      // Now create the slot time in UTC by applying the offset
+      // Handle hour overflow/underflow properly
+      let adjustedHour = slotHour + offsetHours;
+      let adjustedDay = day;
+      let adjustedMonth = month;
+      let adjustedYear = year;
+      
+      // Handle hour overflow (past midnight)
+      if (adjustedHour >= 24) {
+        adjustedHour -= 24;
+        adjustedDay += 1;
+        
+        // Handle month overflow
+        const daysInMonth = new Date(year, month, 0).getDate();
+        if (adjustedDay > daysInMonth) {
+          adjustedDay = 1;
+          adjustedMonth += 1;
+          
+          // Handle year overflow
+          if (adjustedMonth > 12) {
+            adjustedMonth = 1;
+            adjustedYear += 1;
+          }
+        }
+      } else if (adjustedHour < 0) {
+        // Handle hour underflow (before midnight)
+        adjustedHour += 24;
+        adjustedDay -= 1;
+        
+        // Handle month underflow
+        if (adjustedDay < 1) {
+          adjustedMonth -= 1;
+          if (adjustedMonth < 1) {
+            adjustedMonth = 12;
+            adjustedYear -= 1;
+          }
+          const daysInPrevMonth = new Date(adjustedYear, adjustedMonth, 0).getDate();
+          adjustedDay = daysInPrevMonth;
+        }
+      }
+      
+      // Create the slot time in UTC
+      const slotDateTime = new Date(Date.UTC(
+        adjustedYear,
+        adjustedMonth - 1,
+        adjustedDay,
+        adjustedHour,
+        slotMinute,
+        0
+      ));
       
       // Add a buffer of 30 minutes to allow for booking preparation time
       const bufferTime = 30 * 60 * 1000; // 30 minutes in milliseconds
@@ -186,9 +293,12 @@ export function getAvailableSlots(
       const slotIndex = slots.indexOf(slot);
       if (slotIndex < 3 || slotIndex >= slots.length - 3) {
         console.log(`[availability-utils] Slot ${slot}:`, {
-          slotDateTime: slotDateTime.toISOString(),
-          currentTime: now.toISOString(),
-          timeDiff: Math.round((slotDateTime.getTime() - now.getTime()) / 60000) + ' minutes',
+          slotInArtistTz: `${dateStr} ${slot} ${artistTimezone}`,
+          slotUTC: slotDateTime.toISOString(),
+          currentUTC: now.toISOString(),
+          offsetHours: offsetHours,
+          adjustedTime: `${adjustedYear}-${String(adjustedMonth).padStart(2, '0')}-${String(adjustedDay).padStart(2, '0')} ${String(adjustedHour).padStart(2, '0')}:${String(slotMinute).padStart(2, '0')} UTC`,
+          timeDiffMinutes: Math.round((slotDateTime.getTime() - now.getTime()) / 60000),
           isPast,
           isBlocked,
           available: !isBlocked && !isPast
