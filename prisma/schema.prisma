@@ -52,6 +52,7 @@ model MakeupArtist {
   portfolioImages   String[]        // Array of portfolio image URLs
   portfolioImageVersions Int[]      @default([])  // Array of versions corresponding to each portfolio image
   location          String?         // e.g., "New York, NY"
+  timezone          String          @default("America/Los_Angeles") // Artist's timezone for availability
   badges            String[]        // e.g., ["Best of Beauty", "Certified Pro"]
   hourlyRate        Float?
   isAvailable       Boolean         @default(true)

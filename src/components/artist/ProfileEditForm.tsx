@@ -16,6 +16,7 @@ interface ArtistProfile {
   specialties: string[]
   yearsExperience: number | null
   location: string | null
+  timezone: string
   badges: string[]
   hourlyRate: number | null
   isAvailable: boolean
@@ -41,6 +42,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
     specialties: initialData.specialties.join(", "),
     yearsExperience: initialData.yearsExperience?.toString() || "",
     location: initialData.location || "",
+    timezone: initialData.timezone || "America/Los_Angeles",
     badges: initialData.badges.join(", "),
     hourlyRate: initialData.hourlyRate?.toString() || "",
     isAvailable: initialData.isAvailable,
@@ -69,6 +71,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
         specialties: specialtiesArray,
         yearsExperience: formData.yearsExperience ? parseInt(formData.yearsExperience) : null,
         location: formData.location || null,
+        timezone: formData.timezone,
         badges: badgesArray,
         hourlyRate: formData.hourlyRate ? parseFloat(formData.hourlyRate) : null,
         isAvailable: formData.isAvailable,
@@ -102,7 +105,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
     setFormData(prev => ({
       ...prev,
@@ -241,6 +244,28 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
           placeholder="e.g., New York, NY"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
         />
+      </div>
+
+      <div>
+        <label htmlFor="timezone" className="block text-sm font-medium text-gray-700 mb-1">
+          Timezone
+        </label>
+        <select
+          id="timezone"
+          name="timezone"
+          value={formData.timezone}
+          onChange={handleInputChange}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="America/New_York">Eastern Time (ET)</option>
+          <option value="America/Chicago">Central Time (CT)</option>
+          <option value="America/Denver">Mountain Time (MT)</option>
+          <option value="America/Los_Angeles">Pacific Time (PT)</option>
+          <option value="America/Phoenix">Arizona Time (MST)</option>
+          <option value="America/Anchorage">Alaska Time (AKT)</option>
+          <option value="Pacific/Honolulu">Hawaii Time (HST)</option>
+        </select>
+        <p className="text-xs text-gray-500 mt-1">Your availability hours will be in this timezone</p>
       </div>
 
       <div>

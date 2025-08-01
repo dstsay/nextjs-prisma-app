@@ -25,6 +25,7 @@ export default async function ArtistDashboard() {
       specialties: true,
       yearsExperience: true,
       location: true,
+      timezone: true,
       badges: true,
       hourlyRate: true,
       isAvailable: true,

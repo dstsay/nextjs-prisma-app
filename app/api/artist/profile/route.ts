@@ -3,6 +3,17 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 
+// List of common US timezones
+const VALID_TIMEZONES = [
+  'America/New_York',
+  'America/Chicago',
+  'America/Denver',
+  'America/Los_Angeles',
+  'America/Phoenix',
+  'America/Anchorage',
+  'Pacific/Honolulu',
+];
+
 // Validation schema for profile updates
 const profileUpdateSchema = z.object({
   name: z.string().min(1).max(100).optional(), // Make optional for backward compatibility
@@ -12,6 +23,9 @@ const profileUpdateSchema = z.object({
   specialties: z.array(z.string().max(50)).max(10),
   yearsExperience: z.number().min(0).max(50).optional().nullable(),
   location: z.string().max(100).optional().nullable(),
+  timezone: z.string().refine(tz => VALID_TIMEZONES.includes(tz), {
+    message: "Invalid timezone. Please select a valid US timezone.",
+  }).optional(),
   badges: z.array(z.string().max(50)).max(10),
   hourlyRate: z.number().min(0).max(10000).optional().nullable(),
   isAvailable: z.boolean(),
@@ -44,6 +58,7 @@ export async function GET() {
         specialties: true,
         yearsExperience: true,
         location: true,
+        timezone: true,
         badges: true,
         hourlyRate: true,
         isAvailable: true,
@@ -118,6 +133,7 @@ export async function PUT(request: NextRequest) {
         specialties: data.specialties,
         yearsExperience: data.yearsExperience,
         location: data.location,
+        timezone: data.timezone,
         badges: data.badges,
         hourlyRate: data.hourlyRate,
         isAvailable: data.isAvailable,
@@ -133,6 +149,7 @@ export async function PUT(request: NextRequest) {
         specialties: true,
         yearsExperience: true,
         location: true,
+        timezone: true,
         badges: true,
         hourlyRate: true,
         isAvailable: true,

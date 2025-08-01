@@ -40,7 +40,10 @@ export async function GET(
 
     const artist = await prisma.makeupArtist.findUnique({
       where: { id: params.artistId },
-      select: { id: true }
+      select: { 
+        id: true,
+        timezone: true 
+      }
     });
 
     if (!artist) {
@@ -77,12 +80,19 @@ export async function GET(
       appointments
     };
 
-    const availableSlots = getAvailableSlots(date, availabilityData, clientTimezone, dateParam);
+    const availableSlots = getAvailableSlots(
+      date, 
+      availabilityData, 
+      clientTimezone, 
+      dateParam,
+      artist.timezone
+    );
 
     return NextResponse.json({
       date: date.toISOString(),
       availableSlots,
-      timezone: clientTimezone
+      timezone: clientTimezone,
+      artistTimezone: artist.timezone
     });
   } catch (error) {
     console.error('Error fetching availability:', error);

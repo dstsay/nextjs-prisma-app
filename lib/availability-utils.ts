@@ -45,7 +45,8 @@ export function getAvailableSlots(
   date: Date,
   availabilityData: AvailabilityData,
   clientTimezone: string = 'UTC',
-  dateString?: string
+  dateString?: string,
+  artistTimezone: string = 'America/Los_Angeles'
 ): TimeSlot[] {
   const dayOfWeek = getDayOfWeek(date);
   const dateStart = startOfDay(date);
@@ -140,6 +141,7 @@ export function getAvailableSlots(
   console.log('[availability-utils] Date comparison:', {
     dateParam: date.toISOString(),
     clientTimezone: clientTimezone,
+    artistTimezone: artistTimezone,
     nowDateStr: nowDateStr,
     requestDateStr: requestDateStr,
     isToday: isToday,
@@ -165,29 +167,28 @@ export function getAvailableSlots(
     if (isToday) {
       const [slotHour, slotMinute] = slot.split(':').map(Number);
       
-      // Get the current time in the client's timezone
-      const clientTimeFormatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: clientTimezone,
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: false
-      });
+      // The slot times (like "09:00") are in the artist's timezone
+      // We need to check if this slot is in the past
       
-      const currentTimeParts = clientTimeFormatter.formatToParts(now);
-      const currentHour = parseInt(currentTimeParts.find(p => p.type === 'hour')?.value || '0');
-      const currentMinute = parseInt(currentTimeParts.find(p => p.type === 'minute')?.value || '0');
+      // Create a Date object for the slot in the artist's timezone
+      const slotDateTime = new Date(date);
+      slotDateTime.setHours(slotHour, slotMinute, 0, 0);
       
-      // Simple comparison: if the slot hour is less than current hour, it's past
-      // If same hour, check minutes
-      isPast = slotHour < currentHour || (slotHour === currentHour && slotMinute <= currentMinute);
+      // Get current time to compare
+      // Since we're comparing absolute times, we can just use UTC comparison
+      isPast = slotDateTime.getTime() <= now.getTime();
+      
+      // Add a buffer of 30 minutes to allow for booking preparation time
+      const bufferTime = 30 * 60 * 1000; // 30 minutes in milliseconds
+      isPast = slotDateTime.getTime() <= (now.getTime() + bufferTime);
       
       // DEBUG: Log first few slots and last few slots
       const slotIndex = slots.indexOf(slot);
       if (slotIndex < 3 || slotIndex >= slots.length - 3) {
         console.log(`[availability-utils] Slot ${slot}:`, {
-          slotTime: `${slotHour}:${slotMinute}`,
-          currentTime: `${currentHour}:${currentMinute}`,
-          clientTimezone,
+          slotDateTime: slotDateTime.toISOString(),
+          currentTime: now.toISOString(),
+          timeDiff: Math.round((slotDateTime.getTime() - now.getTime()) / 60000) + ' minutes',
           isPast,
           isBlocked,
           available: !isBlocked && !isPast
