@@ -115,33 +115,32 @@ export function getAvailableSlots(
   // Check if we're looking at today's date in the client's timezone
   const now = new Date();
   
-  // Get current time in client's timezone to check if it's "today" for them
-  const clientFormatter = new Intl.DateTimeFormat('en-US', {
-    timeZone: clientTimezone,
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric'
-  });
+  // Since the date is now in UTC, we need to check if it's "today" in the client's timezone
+  // Get YYYY-MM-DD strings in the client's timezone
+  const getDateInTimezone = (d: Date, tz: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      timeZone: tz,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    };
+    // This returns MM/DD/YYYY format
+    const parts = d.toLocaleDateString('en-US', options).split('/');
+    // Convert to YYYY-MM-DD
+    return `${parts[2]}-${parts[0]}-${parts[1]}`;
+  };
   
-  const clientNowParts = clientFormatter.formatToParts(now);
-  const clientDateParts = clientFormatter.formatToParts(date);
+  const nowDateStr = getDateInTimezone(now, clientTimezone);
+  const requestDateStr = getDateInTimezone(date, clientTimezone);
   
-  const nowYear = parseInt(clientNowParts.find(p => p.type === 'year')?.value || '0');
-  const nowMonth = parseInt(clientNowParts.find(p => p.type === 'month')?.value || '0');
-  const nowDay = parseInt(clientNowParts.find(p => p.type === 'day')?.value || '0');
-  
-  const dateYear = parseInt(clientDateParts.find(p => p.type === 'year')?.value || '0');
-  const dateMonth = parseInt(clientDateParts.find(p => p.type === 'month')?.value || '0');
-  const dateDay = parseInt(clientDateParts.find(p => p.type === 'day')?.value || '0');
-  
-  const isToday = nowYear === dateYear && nowMonth === dateMonth && nowDay === dateDay;
+  const isToday = nowDateStr === requestDateStr;
   
   // DEBUG: Enhanced logging for date comparison
   console.log('[availability-utils] Date comparison:', {
     dateParam: date.toISOString(),
     clientTimezone: clientTimezone,
-    clientNow: `${nowYear}-${nowMonth}-${nowDay}`,
-    clientDate: `${dateYear}-${dateMonth}-${dateDay}`,
+    nowDateStr: nowDateStr,
+    requestDateStr: requestDateStr,
     isToday: isToday,
     serverTime: now.toISOString()
   });

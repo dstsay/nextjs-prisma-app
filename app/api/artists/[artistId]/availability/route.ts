@@ -20,9 +20,9 @@ export async function GET(
       );
     }
 
-    // Parse date as local date (not UTC)
+    // Parse date as UTC to avoid timezone shifts
     const [year, month, day] = dateParam.split('-').map(Number);
-    const date = new Date(year, month - 1, day); // month is 0-indexed
+    const date = new Date(Date.UTC(year, month - 1, day)); // month is 0-indexed
     
     if (isNaN(date.getTime())) {
       return NextResponse.json(
