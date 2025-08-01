@@ -77,7 +77,7 @@ export async function GET(
       appointments
     };
 
-    const availableSlots = getAvailableSlots(date, availabilityData, clientTimezone);
+    const availableSlots = getAvailableSlots(date, availabilityData, clientTimezone, dateParam);
 
     return NextResponse.json({
       date: date.toISOString(),

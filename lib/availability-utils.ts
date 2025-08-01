@@ -1,5 +1,5 @@
 import { Availability, AvailabilityException, Appointment } from '@prisma/client';
-import { getDayOfWeek, isSameDay, parseTime, formatTime24, startOfDay, formatTime } from './date-utils';
+import { getDayOfWeek, isSameDay, parseTime, formatTime24, startOfDay, formatTime, formatDateForAPI } from './date-utils';
 
 export interface TimeSlot {
   time: string;
@@ -44,7 +44,8 @@ export function generateTimeSlots(
 export function getAvailableSlots(
   date: Date,
   availabilityData: AvailabilityData,
-  clientTimezone: string = 'UTC'
+  clientTimezone: string = 'UTC',
+  dateString?: string
 ): TimeSlot[] {
   const dayOfWeek = getDayOfWeek(date);
   const dateStart = startOfDay(date);
@@ -115,9 +116,8 @@ export function getAvailableSlots(
   // Check if we're looking at today's date in the client's timezone
   const now = new Date();
   
-  // Since the date is now in UTC, we need to check if it's "today" in the client's timezone
-  // Get YYYY-MM-DD strings in the client's timezone
-  const getDateInTimezone = (d: Date, tz: string) => {
+  // Get current date in client timezone as YYYY-MM-DD
+  const getCurrentDateInTimezone = (tz: string) => {
     const options: Intl.DateTimeFormatOptions = {
       timeZone: tz,
       year: 'numeric',
@@ -125,13 +125,14 @@ export function getAvailableSlots(
       day: '2-digit'
     };
     // This returns MM/DD/YYYY format
-    const parts = d.toLocaleDateString('en-US', options).split('/');
+    const parts = now.toLocaleDateString('en-US', options).split('/');
     // Convert to YYYY-MM-DD
-    return `${parts[2]}-${parts[0]}-${parts[1]}`;
+    return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
   };
   
-  const nowDateStr = getDateInTimezone(now, clientTimezone);
-  const requestDateStr = getDateInTimezone(date, clientTimezone);
+  const nowDateStr = getCurrentDateInTimezone(clientTimezone);
+  // Use the original date string if provided, otherwise fall back to date conversion
+  const requestDateStr = dateString || formatDateForAPI(date);
   
   const isToday = nowDateStr === requestDateStr;
   
@@ -206,9 +207,10 @@ export function checkSlotAvailable(
   date: Date,
   time: string,
   availabilityData: AvailabilityData,
-  clientTimezone: string = 'UTC'
+  clientTimezone: string = 'UTC',
+  dateString?: string
 ): boolean {
-  const slots = getAvailableSlots(date, availabilityData, clientTimezone);
+  const slots = getAvailableSlots(date, availabilityData, clientTimezone, dateString);
   const slot = slots.find(s => s.time === time);
   return slot?.available || false;
 }
